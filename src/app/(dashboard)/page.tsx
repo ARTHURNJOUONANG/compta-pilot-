@@ -5,12 +5,13 @@ import { getSessionUser } from "@/lib/auth";
 import { syncOverdueNotifications } from "@/lib/notifications";
 import { getAssignmentSuggestions } from "@/lib/scoring";
 import { PriorityBadge, StatusBadge } from "@/components/badge";
+import { DemoLoadBanner } from "@/components/demo-load-banner";
 import { FlashBanner } from "@/components/flash-banner";
 import { runMonthlyTvaAction } from "@/actions/obligations";
 import { formatDateFr } from "@/lib/dates";
 
 type Props = {
-  searchParams: Promise<{ monthlyTva?: string }>;
+  searchParams: Promise<{ monthlyTva?: string; demoLoaded?: string }>;
 };
 
 function startOfToday() {
@@ -125,6 +126,14 @@ export default async function DashboardPage({ searchParams }: Props) {
         </p>
       </header>
 
+      {user && (
+        <DemoLoadBanner
+          user={user}
+          clientCount={clientCount}
+          showSuccess={sp.demoLoaded === "1"}
+        />
+      )}
+
       {!Number.isNaN(monthlyCreated) && sp.monthlyTva !== undefined && (
         <FlashBanner
           message={
@@ -137,19 +146,33 @@ export default async function DashboardPage({ searchParams }: Props) {
       )}
 
       {canRunMonthly && (
-        <section className="flex flex-wrap items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50/60 px-4 py-3">
+        <section className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-emerald-200 bg-emerald-50/60 px-4 py-3">
           <p className="text-sm text-emerald-950">
             <span className="font-semibold">Automatisation mensuelle</span> —
             lance la TVA du mois pour chaque client (sans doublon).
           </p>
-          <form action={runMonthlyTvaAction}>
-            <button
-              type="submit"
-              className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+          <div className="flex flex-wrap gap-2">
+            <form action={runMonthlyTvaAction}>
+              <button
+                type="submit"
+                className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+              >
+                Générer TVA du mois
+              </button>
+            </form>
+            <Link
+              href="/rapport"
+              className="rounded-xl border border-emerald-300 bg-white px-4 py-2 text-sm font-medium text-emerald-900 hover:bg-emerald-50"
             >
-              Générer TVA du mois
-            </button>
-          </form>
+              Rapport hebdo
+            </Link>
+            <a
+              href="/api/export/tasks-overdue"
+              className="rounded-xl border border-emerald-300 bg-white px-4 py-2 text-sm font-medium text-emerald-900 hover:bg-emerald-50"
+            >
+              Export CSV retards
+            </a>
+          </div>
         </section>
       )}
 
@@ -290,9 +313,29 @@ export default async function DashboardPage({ searchParams }: Props) {
               </tbody>
             </table>
             {recentTasks.length === 0 && (
-              <p className="px-4 py-8 text-center text-sm text-slate-500">
-                Aucune tâche pour le moment. Créez un client puis une tâche.
-              </p>
+              <div className="px-4 py-8 text-center text-sm text-slate-500">
+                <p>Aucune tâche pour le moment.</p>
+                <div className="mt-3 flex flex-wrap justify-center gap-2">
+                  <Link
+                    href="/clients/new"
+                    className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-700"
+                  >
+                    Nouveau client
+                  </Link>
+                  <Link
+                    href="/tasks/new"
+                    className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                  >
+                    Nouvelle tâche
+                  </Link>
+                  <Link
+                    href="/tasks?filter=overdue"
+                    className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                  >
+                    Voir les retards
+                  </Link>
+                </div>
+              </div>
             )}
           </div>
         </div>

@@ -8,6 +8,7 @@ const links = [
   { href: "/clients", label: "Clients" },
   { href: "/tasks", label: "Tâches" },
   { href: "/documents", label: "Documents" },
+  { href: "/rapport", label: "Rapport" },
   { href: "/equipe", label: "Équipe" },
   { href: "/notifications", label: "Notifications" },
 ] as const;
@@ -36,7 +37,14 @@ export function Sidebar({
         <p className="text-xs text-slate-500">{roleLabel(user.role)}</p>
       </div>
       <nav className="flex flex-1 flex-col gap-1 p-3">
-        {links.map((l) => (
+        {links
+          .filter(
+            (l) =>
+              l.href !== "/rapport" ||
+              user.role === "DIRECTOR" ||
+              user.role === "MANAGER",
+          )
+          .map((l) => (
           <Link
             key={l.href}
             href={l.href}

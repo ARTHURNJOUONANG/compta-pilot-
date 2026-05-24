@@ -1,8 +1,22 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
-export default async function ClientsPage() {
+type Props = { searchParams?: Promise<{ q?: string }> };
+
+export default async function ClientsPage({ searchParams }: Props) {
+  const sp = (await searchParams) ?? {};
+  const q = sp.q?.trim() ?? "";
+
   const clients = await prisma.client.findMany({
+    where: q
+      ? {
+          OR: [
+            { name: { contains: q } },
+            { siret: { contains: q } },
+            { email: { contains: q } },
+          ],
+        }
+      : undefined,
     orderBy: { name: "asc" },
     include: {
       _count: { select: { tasks: true, documents: true } },
@@ -25,6 +39,30 @@ export default async function ClientsPage() {
           Nouveau client
         </Link>
       </div>
+
+      <form method="get" className="flex gap-2">
+        <input
+          type="search"
+          name="q"
+          defaultValue={q}
+          placeholder="Rechercher par nom, SIRET ou email…"
+          className="flex-1 rounded-xl border border-slate-300 px-4 py-2 text-sm outline-none ring-emerald-500/30 focus:ring-2"
+        />
+        <button
+          type="submit"
+          className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+        >
+          Rechercher
+        </button>
+        {q && (
+          <Link
+            href="/clients"
+            className="rounded-xl border border-slate-300 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50"
+          >
+            Effacer
+          </Link>
+        )}
+      </form>
 
       <ul className="divide-y divide-slate-200 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         {clients.map((c) => (
@@ -54,7 +92,9 @@ export default async function ClientsPage() {
       </ul>
       {clients.length === 0 && (
         <p className="text-sm text-slate-500">
-          Aucun client. Commencez par en ajouter un.
+          {q
+            ? `Aucun client pour « ${q} ».`
+            : "Aucun client. Commencez par en ajouter un."}
         </p>
       )}
     </div>
