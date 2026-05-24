@@ -10,7 +10,7 @@ function isAuthenticated(req: NextRequest): boolean {
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  if (pathname.startsWith("/setup")) {
+  if (pathname.startsWith("/setup") || pathname.startsWith("/api/health")) {
     return NextResponse.next();
   }
 
