@@ -1,0 +1,5 @@
+# Remplacer via variable d'environnement DOMAIN (ex. compta.votrecabinet.fr)
+{$DOMAIN} {
+	encode gzip
+	reverse_proxy app:3000
+}

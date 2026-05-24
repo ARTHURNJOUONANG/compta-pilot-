@@ -1,0 +1,133 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  DIRECTOR
+  MANAGER
+  COLLABORATOR
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  IN_VALIDATION
+  DONE
+}
+
+enum TaskPriority {
+  URGENT
+  IMPORTANT
+  NORMAL
+}
+
+enum NotificationType {
+  TASK_ASSIGNED
+  TASK_OVERDUE
+  VALIDATION_REQUESTED
+  TASK_COMPLETED
+  OCR_COMPLETED
+}
+
+enum DocumentCategory {
+  FACTURE
+  JUSTIFICATIF
+  CONTRAT
+  AUTRE
+}
+
+enum OcrStatus {
+  PENDING
+  PROCESSING
+  DONE
+  FAILED
+  SKIPPED
+}
+
+model User {
+  id                 String         @id @default(cuid())
+  email              String         @unique
+  name               String
+  role               Role           @default(COLLABORATOR)
+  passwordHash       String
+  reliabilityScore   Float          @default(75)
+  maxConcurrentTasks Int            @default(8)
+  tasks              Task[]         @relation("Assignee")
+  notifications      Notification[]
+  documents          Document[]     @relation("UploadedBy")
+  createdAt          DateTime       @default(now())
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      NotificationType
+  title     String
+  body      String?
+  taskId    String?
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  @@index([userId, readAt])
+}
+
+model Client {
+  id        String   @id @default(cuid())
+  name      String
+  siret     String?
+  email     String?
+  phone     String?
+  notes     String?
+  tasks     Task[]
+  documents Document[]
+  createdAt DateTime @default(now())
+}
+
+model Document {
+  id           String           @id @default(cuid())
+  clientId     String
+  client       Client           @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  fileName     String
+  storedName   String
+  mimeType     String
+  sizeBytes    Int
+  category     DocumentCategory @default(AUTRE)
+  label        String?
+  uploadedById String?
+  uploadedBy   User?            @relation("UploadedBy", fields: [uploadedById], references: [id], onDelete: SetNull)
+  ocrStatus         OcrStatus  @default(PENDING)
+  ocrText           String?
+  ocrProcessedAt    DateTime?
+  extractedAmount   Float?
+  extractedDate       DateTime?
+  extractedVendor     String?
+  extractedInvoiceNo  String?
+  extractedSiret      String?
+  createdAt    DateTime         @default(now())
+
+  @@index([clientId, category])
+  @@index([ocrStatus])
+}
+
+model Task {
+  id             String       @id @default(cuid())
+  title          String
+  description    String?
+  category       String
+  status         TaskStatus   @default(TODO)
+  priority       TaskPriority @default(NORMAL)
+  dueDate        DateTime
+  validationStep Int          @default(1)
+  clientId       String
+  client         Client       @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  assigneeId     String?
+  assignee       User?        @relation("Assignee", fields: [assigneeId], references: [id])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}

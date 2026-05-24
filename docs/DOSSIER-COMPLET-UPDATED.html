@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Compta Pilot — Dossier de présentation</title>
+  <style>
+    :root { --primary: #0f4c81; --accent: #1a6bb5; --text: #1a1a1a; --muted: #555; }
+    * { box-sizing: border-box; }
+    body { font-family: "Segoe UI", system-ui, sans-serif; line-height: 1.55; color: var(--text); max-width: 900px; margin: 0 auto; padding: 2rem; font-size: 11pt; }
+    h1 { color: var(--primary); font-size: 1.75rem; border-bottom: 3px solid var(--primary); padding-bottom: 0.5rem; page-break-after: avoid; }
+    h2 { color: var(--accent); font-size: 1.25rem; margin-top: 2rem; page-break-after: avoid; }
+    h3 { font-size: 1rem; margin-top: 1.25rem; }
+    .cover { text-align: center; padding: 4rem 1rem; page-break-after: always; }
+    .cover h1 { border: none; font-size: 2.2rem; }
+    .cover .sub { font-size: 1.1rem; color: var(--muted); margin: 1rem 0; }
+    .meta { background: #f4f7fa; padding: 1rem 1.25rem; border-radius: 8px; margin: 1.5rem 0; }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 10pt; }
+    th, td { border: 1px solid #ccc; padding: 0.45rem 0.6rem; text-align: left; }
+    th { background: var(--primary); color: #fff; }
+    tr:nth-child(even) { background: #f9fafb; }
+    ul, ol { margin: 0.5rem 0; padding-left: 1.4rem; }
+    .ok { color: #0a7; font-weight: 600; }
+    .partial { color: #b8860b; font-weight: 600; }
+    .pending { color: #888; }
+    .box { border-left: 4px solid var(--accent); padding: 0.75rem 1rem; background: #f0f6fc; margin: 1rem 0; }
+    .page-break { page-break-before: always; }
+    .us-card { border: 1px solid #ddd; border-radius: 6px; padding: 0.65rem 0.85rem; margin: 0.65rem 0; page-break-inside: avoid; background: #fafbfc; }
+    .us-card h4 { margin: 0 0 0.35rem; color: var(--primary); font-size: 0.95rem; }
+    .us-card p { margin: 0.25rem 0; font-size: 10pt; }
+    code { background: #eee; padding: 0.1rem 0.35rem; border-radius: 3px; font-size: 9pt; }
+    @media print { body { padding: 1rem; } .no-print { display: none; } }
+  </style>
+</head>
+<body>
+
+  <div class="no-print box">
+    <strong>Export PDF :</strong> Ctrl+P → Enregistrer au format PDF. Cocher « Graphiques d'arrière-plan ».
+  </div>
+
+  <section class="cover">
+    <h1>Compta Pilot</h1>
+    <p class="sub">Plateforme intelligente de pilotage pour cabinets comptables</p>
+    <p><strong>Dossier de présentation — MVP</strong></p>
+    <p class="sub">Mai 2026</p>
+    <div class="meta" style="text-align: left; max-width: 400px; margin: 2rem auto;">
+      <p><strong>Stagiaire :</strong> [Nom Prénom]</p>
+      <p><strong>Cabinet :</strong> [Nom du cabinet]</p>
+      <p><strong>Maître de stage :</strong> [Nom]</p>
+      <p><strong>Période :</strong> [Dates]</p>
+    </div>
+  </section>
+
+  <h1>1. Résumé exécutif</h1>
+  <p><strong>Compta Pilot</strong> est une application web pour cabinets comptables (3 à 15 personnes) qui centralise la visibilité sur les dossiers, les échéances, la charge équipe et les validations.</p>
+  <div class="box"><strong>Positionnement :</strong> outil de <em>pilotage organisationnel</em> — pas un remplacement de Pennylane, Cegid ou Sage.</div>
+  <table>
+    <tr><th>Objectif</th><th>Cible</th></tr>
+    <tr><td>Gain de temps coordination</td><td>−30 à 50 %</td></tr>
+    <tr><td>Réduction oublis échéances</td><td>Obligations auto + alertes</td></tr>
+    <tr><td>Visibilité dirigeant</td><td>Dashboard + mobile</td></tr>
+    <tr><td>Qualité</td><td>Workflow validation</td></tr>
+  </table>
+
+  <h1>2. Problématique métier</h1>
+  <ul>
+    <li>Le dirigeant ne voit pas les retards en temps réel</li>
+    <li>Coordination par appels et emails</li>
+    <li>Échéances TVA, URSSAF, bilan suivies manuellement</li>
+    <li>Factures clients dispersées</li>
+    <li>Pas de score pour orienter la délégation</li>
+  </ul>
+
+  <h1>3. Solution — Fonctionnalités livrées</h1>
+  <table>
+    <tr><th>Module</th><th>Fonctionnalités</th><th>Statut</th></tr>
+    <tr><td>Authentification</td><td>Login, sessions signées, rôles, /setup</td><td class="ok">✓ Livré</td></tr>
+    <tr><td>Clients</td><td>CRUD, obligations auto</td><td class="ok">✓ Livré</td></tr>
+    <tr><td>Tâches</td><td>Statuts, assignation intelligente</td><td class="ok">✓ Livré</td></tr>
+    <tr><td>Dashboard</td><td>Retards, charge, suggestions</td><td class="ok">✓ Livré</td></tr>
+    <tr><td>Workflow</td><td>Exécution → validation → approbation</td><td class="ok">✓ Livré</td></tr>
+    <tr><td>Obligations</td><td>TVA, URSSAF, bilan, liasse</td><td class="ok">✓ Livré</td></tr>
+    <tr><td>Documents</td><td>Upload, OCR factures</td><td class="ok">✓ Livré</td></tr>
+    <tr><td>Notifications</td><td>In-app + emails SMTP</td><td class="ok">✓ Livré</td></tr>
+    <tr><td>Équipe</td><td>Comptes, scoring fiabilité</td><td class="ok">✓ Livré</td></tr>
+    <tr><td>Déploiement</td><td>Docker, HTTPS, DEPLOY.md</td><td class="ok">✓ Livré</td></tr>
+  </table>
+
+  <h1 class="page-break">4. Architecture technique</h1>
+  <table>
+    <tr><th>Couche</th><th>Technologie</th></tr>
+    <tr><td>Frontend</td><td>Next.js 16, React 19, Tailwind CSS 4</td></tr>
+    <tr><td>Backend</td><td>Server Actions, API Routes</td></tr>
+    <tr><td>Base</td><td>SQLite + Prisma ORM</td></tr>
+    <tr><td>Sécurité</td><td>Sessions HMAC, bcrypt, HTTPS</td></tr>
+    <tr><td>OCR</td><td>Tesseract.js, pdf-parse</td></tr>
+    <tr><td>Emails</td><td>Nodemailer (Brevo en prod)</td></tr>
+    <tr><td>Conteneurs</td><td>Docker + Caddy</td></tr>
+  </table>
+
+  <h2>Rôles utilisateurs</h2>
+  <table>
+    <tr><th>Rôle</th><th>Responsabilités</th></tr>
+    <tr><td>Dirigeant</td><td>Vue globale, validation, gestion équipe</td></tr>
+    <tr><td>Manager</td><td>Clients, tâches, assignation</td></tr>
+    <tr><td>Collaborateur</td><td>Exécution tâches, documents, demande validation</td></tr>
+  </table>
+
+  <h1>5. Travail réalisé (6 phases)</h1>
+  <p><strong>Phase 1</strong> — MVP : auth, clients, tâches, dashboard, assignation, PWA.</p>
+  <p><strong>Phase 2</strong> — Automatisation : obligations, TVA mensuelle, notifications, emails, validation.</p>
+  <p><strong>Phase 3</strong> — Intelligence : score fiabilité, suggestions.</p>
+  <p><strong>Phase 4</strong> — Documents : upload, OCR, page globale.</p>
+  <p><strong>Phase 5</strong> — Production réelle : setup, équipe, config prod.</p>
+  <p><strong>Phase 6</strong> — Industrialisation : Docker, Caddy, DEPLOY.md, /api/health.</p>
+
+  <h1 class="page-break">6. Ce qui reste à faire</h1>
+  <table>
+    <tr><th>Priorité</th><th>Élément</th><th>Délai</th></tr>
+    <tr><td>Haute</td><td>Export CSV/PDF, invitation email, pilote HTTPS</td><td>1–2 j</td></tr>
+    <tr><td>Moyenne</td><td>PostgreSQL, OCR cloud</td><td>2–4 sem.</td></tr>
+    <tr><td>Basse</td><td>App native, intégration ERP</td><td>2–6 mois</td></tr>
+  </table>
+
+  <h1>7. Analyse concurrentielle</h1>
+  <table>
+    <tr><th>Solution</th><th>Rapport avec Compta Pilot</th></tr>
+    <tr><td>Pennylane, Cegid, Sage</td><td>Complément — compta complète</td></tr>
+    <tr><td>Karbon, Financial Cents</td><td>Proche — moins obligations FR</td></tr>
+    <tr><td>Dext</td><td>OCR fort — pas dashboard cabinet</td></tr>
+    <tr><td>Asana, Monday</td><td>Générique — pas métier compta</td></tr>
+  </table>
+
+  <h1>8. Proposition pilote</h1>
+  <p>Semaine 1 : HTTPS. Semaines 2–4 : 10 dossiers, 3 utilisateurs. Semaine 5 : bilan. Coût ~5 €/mois.</p>
+
+  <h1>9. Scénario démo (15 min)</h1>
+  <ol>
+    <li>Dashboard dirigeant — retards, charge</li>
+    <li>Nouveau client — obligations auto</li>
+    <li>Assignation intelligente</li>
+    <li>Collaborateur — demande validation</li>
+    <li>Mobile dirigeant — approbation</li>
+    <li>Facture + OCR</li>
+    <li>Email notification</li>
+    <li>Proposition pilote 4 semaines</li>
+  </ol>
+
+  <!-- USER STORIES -->
+  <h1 class="page-break">10. User Stories</h1>
+  <p><em>En tant que [persona], je veux [action], afin de [bénéfice].</em></p>
+
+  <h2>Personas</h2>
+  <table>
+    <tr><th>Code</th><th>Persona</th><th>Rôle</th></tr>
+    <tr><td><strong>DIR</strong></td><td>Dirigeant</td><td>DIRECTOR</td></tr>
+    <tr><td><strong>MGR</strong></td><td>Manager</td><td>MANAGER</td></tr>
+    <tr><td><strong>COL</strong></td><td>Collaborateur</td><td>COLLABORATOR</td></tr>
+    <tr><td><strong>SYS</strong></td><td>Admin technique</td><td>Déploiement</td></tr>
+  </table>
+  <p><span class="ok">✓ Livré</span> | <span class="partial">◐ Partiel</span> | <span class="pending">○ Non livré</span></p>
+
+  <h2>Synthèse (37 user stories)</h2>
+  <table>
+    <tr><th>ID</th><th>Persona</th><th>Résumé</th><th>Statut</th></tr>
+    <tr><td>US-1.1</td><td>DIR</td><td>Setup cabinet /setup</td><td class="ok">✓</td></tr>
+    <tr><td>US-1.2</td><td>Tous</td><td>Connexion sécurisée</td><td class="ok">✓</td></tr>
+    <tr><td>US-1.3</td><td>Tous</td><td>Déconnexion</td><td class="ok">✓</td></tr>
+    <tr><td>US-2.1</td><td>DIR, MGR</td><td>Créer compte collaborateur</td><td class="partial">◐</td></tr>
+    <tr><td>US-2.2</td><td>DIR, MGR</td><td>Charge et fiabilité équipe</td><td class="ok">✓</td></tr>
+    <tr><td>US-3.1</td><td>DIR, MGR</td><td>Créer client</td><td class="ok">✓</td></tr>
+    <tr><td>US-3.2</td><td>DIR, MGR</td><td>Obligations auto</td><td class="ok">✓</td></tr>
+    <tr><td>US-3.3</td><td>Tous</td><td>Liste clients</td><td class="ok">✓</td></tr>
+    <tr><td>US-3.4</td><td>Tous</td><td>Fiche client 360°</td><td class="ok">✓</td></tr>
+    <tr><td>US-3.5</td><td>DIR, MGR</td><td>Modifier / supprimer client</td><td class="ok">✓</td></tr>
+    <tr><td>US-4.1</td><td>DIR, MGR</td><td>Créer tâche manuelle</td><td class="ok">✓</td></tr>
+    <tr><td>US-4.2</td><td>Tous</td><td>Liste tâches</td><td class="ok">✓</td></tr>
+    <tr><td>US-4.3</td><td>Tous</td><td>Détail tâche</td><td class="ok">✓</td></tr>
+    <tr><td>US-4.4</td><td>DIR, MGR</td><td>Assignation intelligente</td><td class="ok">✓</td></tr>
+    <tr><td>US-4.5</td><td>COL</td><td>Tâche en cours</td><td class="ok">✓</td></tr>
+    <tr><td>US-4.6</td><td>COL</td><td>Demander validation</td><td class="ok">✓</td></tr>
+    <tr><td>US-4.7</td><td>DIR, MGR</td><td>Approuver tâche</td><td class="ok">✓</td></tr>
+    <tr><td>US-4.8</td><td>DIR, MGR</td><td>Générer TVA du mois</td><td class="ok">✓</td></tr>
+    <tr><td>US-5.1</td><td>DIR, MGR</td><td>Dashboard KPIs</td><td class="ok">✓</td></tr>
+    <tr><td>US-5.2</td><td>DIR, MGR</td><td>Charge équipe</td><td class="ok">✓</td></tr>
+    <tr><td>US-5.3</td><td>DIR, MGR</td><td>Suggestions d'action</td><td class="ok">✓</td></tr>
+    <tr><td>US-5.4</td><td>COL</td><td>Dashboard collaborateur</td><td class="ok">✓</td></tr>
+    <tr><td>US-6.1</td><td>Tous</td><td>Notifications in-app</td><td class="ok">✓</td></tr>
+    <tr><td>US-6.2</td><td>Tous</td><td>Emails SMTP</td><td class="ok">✓</td></tr>
+    <tr><td>US-6.3</td><td>DIR, MGR</td><td>Alertes retards</td><td class="ok">✓</td></tr>
+    <tr><td>US-7.1</td><td>Tous</td><td>Upload document</td><td class="ok">✓</td></tr>
+    <tr><td>US-7.2</td><td>DIR, MGR</td><td>Vue /documents</td><td class="ok">✓</td></tr>
+    <tr><td>US-7.3</td><td>Tous</td><td>Télécharger document</td><td class="ok">✓</td></tr>
+    <tr><td>US-7.4</td><td>COL</td><td>OCR facture</td><td class="ok">✓</td></tr>
+    <tr><td>US-7.5</td><td>Tous</td><td>Supprimer document</td><td class="ok">✓</td></tr>
+    <tr><td>US-8.1</td><td>DIR</td><td>Score fiabilité auto</td><td class="ok">✓</td></tr>
+    <tr><td>US-9.1</td><td>DIR</td><td>Mobile / PWA</td><td class="partial">◐</td></tr>
+    <tr><td>US-10.1</td><td>SYS</td><td>Prod HTTPS</td><td class="ok">✓</td></tr>
+    <tr><td>US-10.2</td><td>SYS</td><td>Sauvegarde données</td><td class="partial">◐</td></tr>
+    <tr><td>US-10.3</td><td>SYS</td><td>Mode démo seed</td><td class="partial">◐</td></tr>
+    <tr><td>US-11.1</td><td>DIR</td><td>Export CSV retards</td><td class="pending">○</td></tr>
+    <tr><td>US-11.2</td><td>DIR</td><td>Rapport PDF hebdo</td><td class="pending">○</td></tr>
+  </table>
+
+  <h2 class="page-break">Détail par epic</h2>
+
+  <h3>Epic 1 — Installation et accès</h3>
+  <div class="us-card"><h4>US-1.1</h4><p><strong>En tant que</strong> DIR, <strong>je veux</strong> configurer le cabinet via <code>/setup</code>, <strong>afin de</strong> démarrer sans compte démo.</p></div>
+  <div class="us-card"><h4>US-1.2</h4><p><strong>En tant que</strong> utilisateur, <strong>je veux</strong> me connecter en sécurité (bcrypt, session HMAC, HTTPS).</p></div>
+  <div class="us-card"><h4>US-1.3</h4><p><strong>En tant que</strong> utilisateur, <strong>je veux</strong> me déconnecter, <strong>afin de</strong> protéger mes données.</p></div>
+
+  <h3>Epic 2 — Équipe</h3>
+  <div class="us-card"><h4>US-2.1</h4><p><strong>En tant que</strong> DIR/MGR, <strong>je veux</strong> créer des comptes équipe. <span class="pending">○ Invitation email à venir.</span></p></div>
+  <div class="us-card"><h4>US-2.2</h4><p><strong>En tant que</strong> DIR/MGR, <strong>je veux</strong> voir charge et score fiabilité, <strong>afin de</strong> déléguer intelligemment.</p></div>
+
+  <h3>Epic 3 — Clients</h3>
+  <div class="us-card"><h4>US-3.1 à US-3.5</h4><p>CRUD clients, obligations TVA/URSSAF/bilan/liasse auto, fiche 360°. COL : consultation seule pour modification.</p></div>
+
+  <h3>Epic 4 — Tâches</h3>
+  <div class="us-card"><h4>US-4.1 à US-4.8</h4><p>CRUD, assignation (charge + fiabilité), workflow validation, génération TVA portefeuille, scoring +2/−5.</p></div>
+
+  <h3>Epic 5 — Dashboard</h3>
+  <div class="us-card"><h4>US-5.1 à US-5.4</h4><p>KPIs, charge équipe, suggestions proactives, vue collaborateur.</p></div>
+
+  <h3>Epic 6 — Notifications</h3>
+  <div class="us-card"><h4>US-6.1 à US-6.3</h4><p>Notifications in-app, emails avec lien, détection retards automatique.</p></div>
+
+  <h3>Epic 7 — Documents et OCR</h3>
+  <div class="us-card"><h4>US-7.1 à US-7.5</h4><p>Upload, vue globale, téléchargement, OCR (montant, date, SIRET), suppression selon rôle.</p></div>
+
+  <h3>Epic 8 — Scoring</h3>
+  <div class="us-card"><h4>US-8.1</h4><p><strong>En tant que</strong> DIR, <strong>je veux</strong> un score fiabilité dynamique (+2/−5), <strong>afin d'</strong> objectiver la délégation.</p></div>
+
+  <h3>Epic 9 — Mobile</h3>
+  <div class="us-card"><h4>US-9.1</h4><p>Responsive + PWA. <span class="pending">○ App native iOS/Android non livrée.</span></p></div>
+
+  <h3>Epic 10 — Déploiement</h3>
+  <div class="us-card"><h4>US-10.1 à US-10.3</h4><p>Docker, Caddy, DEPLOY.md, seed démo. Backup auto et reset UI à venir.</p></div>
+
+  <h3>Epic 11 — Exports (backlog)</h3>
+  <div class="us-card"><h4>US-11.1 / US-11.2</h4><p>Export CSV retards et rapport PDF hebdo — <span class="pending">non livrés</span>.</p></div>
+
+  <h2>Matrice persona × epic</h2>
+  <table>
+    <tr><th>Epic</th><th>DIR</th><th>MGR</th><th>COL</th><th>SYS</th></tr>
+    <tr><td>Installation</td><td>●</td><td></td><td></td><td>●</td></tr>
+    <tr><td>Équipe</td><td>●</td><td>●</td><td></td><td></td></tr>
+    <tr><td>Clients</td><td>●</td><td>●</td><td>○</td><td></td></tr>
+    <tr><td>Tâches</td><td>●</td><td>●</td><td>●</td><td></td></tr>
+    <tr><td>Dashboard</td><td>●</td><td>●</td><td>○</td><td></td></tr>
+    <tr><td>Notifications</td><td>●</td><td>●</td><td>●</td><td></td></tr>
+    <tr><td>Documents</td><td>●</td><td>●</td><td>●</td><td></td></tr>
+    <tr><td>Scoring</td><td>●</td><td>○</td><td>○</td><td></td></tr>
+    <tr><td>Mobile</td><td>●</td><td>○</td><td>○</td><td></td></tr>
+    <tr><td>Déploiement</td><td></td><td></td><td></td><td>●</td></tr>
+    <tr><td>Exports</td><td>●</td><td>○</td><td></td><td></td></tr>
+  </table>
+  <p><em>● = stories principales | ○ = stories secondaires</em></p>
+
+  <h2>Priorisation MoSCoW</h2>
+  <table>
+    <tr><th>Must (livré)</th><th>Should</th><th>Could</th><th>Won't</th></tr>
+    <tr>
+      <td>Auth, clients, tâches, dashboard, OCR, notifications</td>
+      <td>Export CSV, invitation email, sauvegarde auto</td>
+      <td>Rapport PDF, OCR cloud, multi-cabinets</td>
+      <td>Compta réglementée, télédéclaration, app native</td>
+    </tr>
+  </table>
+
+  <h1 class="page-break">11. Message clé pour le dirigeant</h1>
+  <div class="box" style="font-size: 1.05rem;">
+    « Compta Pilot ne remplace pas votre logiciel comptable. Il vous donne en 5 secondes la liste de tout ce qui est en retard, aide à déléguer au bon collaborateur, et vous permet de valider depuis votre téléphone. Je propose un pilote de 4 semaines sur 10 dossiers, pour environ 5 € par mois de serveur. »
+  </div>
+
+  <h1>12. Conclusion</h1>
+  <p>Le MVP Compta Pilot est <strong>fonctionnel, documenté et déployable</strong>. Les <strong>37 user stories</strong> couvrent le métier : <strong>32 livrées</strong>, 3 partielles, 2 en backlog. Prochaine étape : <strong>pilote encadré</strong> 4 semaines.</p>
+
+  <p style="margin-top: 3rem; font-size: 9pt; color: var(--muted); text-align: center;">
+    Compta Pilot — Mai 2026 — docs/07-USER-STORIES.md
+  </p>
+
+</body>
+</html>

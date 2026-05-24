@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Compta Pilot — Dossier de présentation</title>
+  <style>
+    :root { --primary: #0f4c81; --accent: #1a6bb5; --text: #1a1a1a; --muted: #555; }
+    * { box-sizing: border-box; }
+    body { font-family: "Segoe UI", system-ui, sans-serif; line-height: 1.55; color: var(--text); max-width: 900px; margin: 0 auto; padding: 2rem; font-size: 11pt; }
+    h1 { color: var(--primary); font-size: 1.75rem; border-bottom: 3px solid var(--primary); padding-bottom: 0.5rem; page-break-after: avoid; }
+    h2 { color: var(--accent); font-size: 1.25rem; margin-top: 2rem; page-break-after: avoid; }
+    h3 { font-size: 1rem; margin-top: 1.25rem; }
+    .cover { text-align: center; padding: 4rem 1rem; page-break-after: always; }
+    .cover h1 { border: none; font-size: 2.2rem; }
+    .cover .sub { font-size: 1.1rem; color: var(--muted); margin: 1rem 0; }
+    .meta { background: #f4f7fa; padding: 1rem 1.25rem; border-radius: 8px; margin: 1.5rem 0; }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 10pt; }
+    th, td { border: 1px solid #ccc; padding: 0.45rem 0.6rem; text-align: left; }
+    th { background: var(--primary); color: #fff; }
+    tr:nth-child(even) { background: #f9fafb; }
+    ul { margin: 0.5rem 0; padding-left: 1.4rem; }
+    .ok { color: #0a7; font-weight: 600; }
+    .no { color: #c33; }
+    .box { border-left: 4px solid var(--accent); padding: 0.75rem 1rem; background: #f0f6fc; margin: 1rem 0; }
+    .page-break { page-break-before: always; }
+    @media print {
+      body { padding: 1rem; }
+      .no-print { display: none; }
+      h2 { page-break-before: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="no-print box">
+    <strong>Export PDF :</strong> Ctrl+P → Enregistrer au format PDF. Cocher « Graphiques d’arrière-plan ».
+  </div>
+
+  <section class="cover">
+    <h1>Compta Pilot</h1>
+    <p class="sub">Plateforme intelligente de pilotage pour cabinets comptables</p>
+    <p><strong>Dossier de présentation — MVP</strong></p>
+    <p class="sub">Mai 2026</p>
+    <div class="meta" style="text-align: left; max-width: 400px; margin: 2rem auto;">
+      <p><strong>Stagiaire :</strong> [Nom Prénom]</p>
+      <p><strong>Cabinet :</strong> [Nom du cabinet]</p>
+      <p><strong>Maître de stage :</strong> [Nom]</p>
+      <p><strong>Période :</strong> [Dates]</p>
+    </div>
+  </section>
+
+  <h1>1. Résumé exécutif</h1>
+  <p><strong>Compta Pilot</strong> est une application web pour cabinets comptables (3 à 15 personnes) qui centralise la visibilité sur les dossiers, les échéances, la charge équipe et les validations.</p>
+  <div class="box">
+    <strong>Positionnement :</strong> outil de <em>pilotage organisationnel</em> — pas un remplacement de Pennylane, Cegid ou Sage.
+  </div>
+  <table>
+    <tr><th>Objectif</th><th>Cible</th></tr>
+    <tr><td>Gain de temps coordination</td><td>−30 à 50 %</td></tr>
+    <tr><td>Réduction oublis échéances</td><td>Obligations auto + alertes</td></tr>
+    <tr><td>Visibilité dirigeant</td><td>Dashboard + mobile</td></tr>
+    <tr><td>Qualité</td><td>Workflow validation</td></tr>
+  </table>
+
+  <h1>2. Problématique métier</h1>
+  <ul>
+    <li>Le dirigeant ne voit pas les retards en temps réel</li>
+    <li>Coordination par appels et emails</li>
+    <li>Échéances TVA, URSSAF, bilan suivies manuellement</li>
+    <li>Factures clients dispersées</li>
+    <li>Pas de score pour orienter la délégation</li>
+  </ul>
+
+  <h1>3. Solution — Fonctionnalités livrées</h1>
+  <table>
+    <tr><th>Module</th><th>Fonctionnalités</th><th>Statut</th></tr>
+    <tr><td>Authentification</td><td>Login, sessions signées, rôles, /setup premier admin</td><td class="ok">✓ Livré</td></tr>
+    <tr><td>Clients</td><td>CRUD, fiche détail, obligations auto à la création</td><td class="ok">✓ Livré</td></tr>
+    <tr><td>Tâches</td><td>Statuts, priorités, échéances, assignation intelligente</td><td class="ok">✓ Livré</td></tr>
+    <tr><td>Dashboard</td><td>Retards, urgences, charge, suggestions</td><td class="ok">✓ Livré</td></tr>
+    <tr><td>Workflow</td><td>Exécution → validation → approbation dirigeant</td><td class="ok">✓ Livré</td></tr>
+    <tr><td>Obligations</td><td>TVA, URSSAF, bilan, liasse + génération TVA mensuelle</td><td class="ok">✓ Livré</td></tr>
+    <tr><td>Documents</td><td>Upload, OCR factures (montant, date, SIRET)</td><td class="ok">✓ Livré</td></tr>
+    <tr><td>Notifications</td><td>In-app + emails SMTP</td><td class="ok">✓ Livré</td></tr>
+    <tr><td>Équipe</td><td>Création comptes, scoring fiabilité dynamique</td><td class="ok">✓ Livré</td></tr>
+    <tr><td>Déploiement</td><td>Docker, prod HTTPS (Caddy), guide DEPLOY.md</td><td class="ok">✓ Livré</td></tr>
+  </table>
+
+  <h1 class="page-break">4. Architecture technique</h1>
+  <table>
+    <tr><th>Couche</th><th>Technologie</th></tr>
+    <tr><td>Frontend</td><td>Next.js 16, React 19, Tailwind CSS 4</td></tr>
+    <tr><td>Backend</td><td>Server Actions, API Routes</td></tr>
+    <tr><td>Base</td><td>SQLite + Prisma ORM</td></tr>
+    <tr><td>Sécurité</td><td>Sessions HMAC, bcrypt, HTTPS</td></tr>
+    <tr><td>OCR</td><td>Tesseract.js, pdf-parse</td></tr>
+    <tr><td>Emails</td><td>Nodemailer (Brevo en prod)</td></tr>
+    <tr><td>Conteneurs</td><td>Docker + Caddy (HTTPS)</td></tr>
+  </table>
+
+  <h2>Rôles utilisateurs</h2>
+  <table>
+    <tr><th>Rôle</th><th>Responsabilités</th></tr>
+    <tr><td>Dirigeant</td><td>Vue globale, validation, gestion équipe</td></tr>
+    <tr><td>Manager</td><td>Clients, tâches, assignation</td></tr>
+    <tr><td>Collaborateur</td><td>Exécution tâches, documents, demande validation</td></tr>
+  </table>
+
+  <h1>5. Travail réalisé (synthèse par phase)</h1>
+  <h3>Phase 1 — MVP</h3>
+  <p>Auth, clients, tâches, dashboard, assignation intelligente, interface responsive, PWA.</p>
+  <h3>Phase 2 — Automatisation</h3>
+  <p>Obligations automatiques, génération TVA mensuelle, notifications, emails SMTP, workflow validation.</p>
+  <h3>Phase 3 — Intelligence</h3>
+  <p>Score fiabilité (+2 à temps, −5 retard), suggestions dashboard.</p>
+  <h3>Phase 4 — Documents</h3>
+  <p>Upload, OCR images/PDF, extraction champs, page documents globale.</p>
+  <h3>Phase 5 — Production réelle</h3>
+  <p>Setup cabinet, gestion équipe, pas de démo par défaut, config prod validée.</p>
+  <h3>Phase 6 — Industrialisation</h3>
+  <p>Docker, Mailpit, compose prod + Caddy, DEPLOY.md, /api/health.</p>
+
+  <h1 class="page-break">6. Ce qui reste à faire</h1>
+  <table>
+    <tr><th>Priorité</th><th>Élément</th><th>Délai indicatif</th></tr>
+    <tr><td>Haute</td><td>Export CSV/PDF rapports</td><td>1–2 jours</td></tr>
+    <tr><td>Haute</td><td>Invitation email nouveaux comptes</td><td>1 jour</td></tr>
+    <tr><td>Haute</td><td>Pilote HTTPS domaine cabinet</td><td>1 jour</td></tr>
+    <tr><td>Moyenne</td><td>PostgreSQL, multi-cabinets</td><td>2–4 semaines</td></tr>
+    <tr><td>Moyenne</td><td>OCR cloud (meilleure précision)</td><td>1 semaine</td></tr>
+    <tr><td>Basse</td><td>App mobile native, intégration ERP</td><td>2–6 mois</td></tr>
+  </table>
+
+  <h1>7. Analyse concurrentielle (synthèse)</h1>
+  <table>
+    <tr><th>Solution</th><th>Rapport avec Compta Pilot</th></tr>
+    <tr><td>Pennylane, Cegid, Sage</td><td>Complément — compta complète, moins pilotage léger</td></tr>
+    <tr><td>Karbon, Financial Cents</td><td>Proche — moins orienté obligations FR</td></tr>
+    <tr><td>Dext</td><td>OCR fort — pas de dashboard cabinet</td></tr>
+    <tr><td>Asana, Monday</td><td>Générique — pas métier compta</td></tr>
+  </table>
+  <div class="box">
+    <strong>Avantage :</strong> tout-en-un léger, obligations françaises, assignation charge + fiabilité, déploiement ~5 €/mois.
+  </div>
+
+  <h1>8. Proposition pilote</h1>
+  <table>
+    <tr><th>Semaine</th><th>Action</th></tr>
+    <tr><td>1</td><td>Mise en ligne HTTPS sur compta.votrecabinet.fr</td></tr>
+    <tr><td>2–4</td><td>10 dossiers réels, 1 dirigeant + 2 collaborateurs</td></tr>
+    <tr><td>5</td><td>Bilan : temps gagné, retards évités, décision</td></tr>
+  </table>
+  <p><strong>Coût serveur :</strong> environ 4–6 €/mois (VPS) + domaine existant.</p>
+
+  <h1 class="page-break">9. Scénario démo (15 min)</h1>
+  <ol>
+    <li><strong>Dashboard dirigeant</strong> — retards, charge (2 min)</li>
+    <li><strong>Nouveau client</strong> — obligations auto créées (2 min)</li>
+    <li><strong>Assignation</strong> — collaborateur suggéré (2 min)</li>
+    <li><strong>Collaborateur</strong> — exécution, demande validation (3 min)</li>
+    <li><strong>Mobile dirigeant</strong> — validation (2 min)</li>
+    <li><strong>Facture + OCR</strong> — montant, date extraits (2 min)</li>
+    <li><strong>Email</strong> — notification reçue (1 min)</li>
+    <li><strong>Conclusion</strong> — proposition pilote 4 semaines (1 min)</li>
+  </ol>
+
+  <h1>10. Message clé pour le dirigeant</h1>
+  <div class="box" style="font-size: 1.05rem;">
+    « Compta Pilot ne remplace pas votre logiciel comptable. Il vous donne en 5 secondes la liste de tout ce qui est en retard, aide à déléguer au bon collaborateur, et vous permet de valider depuis votre téléphone. Je propose un pilote de 4 semaines sur 10 dossiers, pour environ 5 € par mois de serveur. »
+  </div>
+
+  <h1>11. Conclusion</h1>
+  <p>Le MVP Compta Pilot est <strong>fonctionnel, documenté et déployable</strong>. Il répond au besoin de visibilité et d’organisation identifié en cabinet. La prochaine étape recommandée est un <strong>pilote encadré</strong> avant tout investissement lourd.</p>
+
+  <p style="margin-top: 3rem; color: var(--muted); font-size: 9pt; text-align: center;">
+    Compta Pilot — Dossier généré pour présentation stage — Mai 2026<br />
+    Sources détaillées : dossier docs/ du projet plateforme-compta
+  </p>
+
+</body>
+</html>
