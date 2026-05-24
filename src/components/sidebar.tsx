@@ -7,7 +7,7 @@ const links = [
   { href: "/", label: "Tableau de bord" },
   { href: "/clients", label: "Clients" },
   { href: "/tasks", label: "Tâches" },
-  { href: "/documents", label: "Documents" },
+  { href: "/documents", label: "Coffre-fort" },
   { href: "/rapport", label: "Rapport" },
   { href: "/equipe", label: "Équipe" },
   { href: "/notifications", label: "Notifications" },

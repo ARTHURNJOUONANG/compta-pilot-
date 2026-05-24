@@ -75,5 +75,6 @@ export async function deleteClientAction(clientId: string) {
   revalidatePath("/clients");
   revalidatePath("/");
   revalidatePath("/tasks");
+  revalidatePath("/documents");
   redirect("/clients");
 }

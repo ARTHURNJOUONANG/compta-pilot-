@@ -21,6 +21,7 @@ type Props = {
     docUploaded?: string;
     docDeleted?: string;
     docError?: string;
+    docWarn?: string;
     ocrStarted?: string;
     ocrDone?: string;
   }>;
@@ -66,14 +67,14 @@ export default async function ClientDetailPage({ params, searchParams }: Props) 
           variant="info"
         />
       )}
-      {sp.docUploaded === "1" && !sp.ocrStarted && (
-        <FlashBanner message="Document déposé et classé automatiquement." />
-      )}
-      {sp.docUploaded === "1" && sp.ocrStarted === "1" && (
+      {sp.docUploaded && Number(sp.docUploaded) > 0 && (
         <FlashBanner
-          message="Document déposé — analyse OCR lancée (actualisez dans ~10 s)."
-          variant="info"
+          message={`${sp.docUploaded} document(s) archivé(s).${Number(sp.ocrStarted ?? 0) > 0 ? ` OCR lancé sur ${sp.ocrStarted} fichier(s).` : ""}`}
+          variant={Number(sp.ocrStarted ?? 0) > 0 ? "info" : "success"}
         />
+      )}
+      {sp.docWarn && (
+        <FlashBanner message={decodeURIComponent(sp.docWarn)} variant="info" />
       )}
       {sp.ocrDone === "1" && (
         <FlashBanner message="Analyse OCR terminée." />
@@ -233,6 +234,7 @@ export default async function ClientDetailPage({ params, searchParams }: Props) 
       {user && (
         <ClientDocuments
           clientId={client.id}
+          clientName={client.name}
           documents={client.documents}
           canDeleteAny={canDelete}
           currentUserId={user.id}

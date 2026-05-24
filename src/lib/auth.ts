@@ -1,4 +1,5 @@
 import { Role } from "@prisma/client";
+import { ensureAppReady } from "@/lib/app-config";
 import { prisma } from "@/lib/prisma";
 import { getSessionUserId } from "@/lib/session";
 
@@ -10,6 +11,7 @@ export type SessionUser = {
 };
 
 export async function getSessionUser(): Promise<SessionUser | null> {
+  await ensureAppReady();
   const id = await getSessionUserId();
   if (!id) return null;
   const user = await prisma.user.findUnique({

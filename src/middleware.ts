@@ -18,6 +18,13 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
+  if (pathname.startsWith("/api/")) {
+    if (!isAuthenticated(req)) {
+      return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+    }
+    return NextResponse.next();
+  }
+
   if (pathname.startsWith("/login")) {
     if (isAuthenticated(req)) {
       return NextResponse.redirect(new URL("/", req.url));

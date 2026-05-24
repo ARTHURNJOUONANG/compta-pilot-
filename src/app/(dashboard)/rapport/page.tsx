@@ -26,7 +26,20 @@ export default async function RapportPage() {
   const user = await getSessionUser();
   if (!user) redirect("/login");
   if (user.role === Role.COLLABORATOR) {
-    redirect("/");
+    return (
+      <div className="mx-auto max-w-xl space-y-4 rounded-2xl border border-amber-200 bg-amber-50 p-8">
+        <h1 className="text-xl font-semibold text-amber-950">Accès réservé</h1>
+        <p className="text-sm text-amber-900/90">
+          Le rapport hebdomadaire est réservé aux dirigeants et managers.
+        </p>
+        <Link
+          href="/"
+          className="inline-block text-sm font-medium text-emerald-700 hover:underline"
+        >
+          ← Retour au tableau de bord
+        </Link>
+      </div>
+    );
   }
 
   const today = startOfToday();

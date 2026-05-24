@@ -1,8 +1,9 @@
 import { DocumentCategory } from "@prisma/client";
 import {
   deleteDocumentAction,
-  uploadDocumentAction,
+  uploadDocumentsBulkAction,
 } from "@/actions/documents";
+import { DocumentUploadZone } from "@/components/document-upload-zone";
 import { documentCategoryLabel } from "@/lib/labels";
 import { formatFileSize } from "@/lib/documents";
 import { formatDateFr } from "@/lib/dates";
@@ -11,6 +12,7 @@ import {
   DocumentOcrPanel,
   type DocumentOcrFields,
 } from "@/components/document-ocr-badge";
+import Link from "next/link";
 
 const categoryStyles: Record<DocumentCategory, string> = {
   FACTURE: "bg-violet-100 text-violet-900",
@@ -32,11 +34,13 @@ export type ClientDocumentRow = DocumentOcrFields & {
 
 export function ClientDocuments({
   clientId,
+  clientName,
   documents,
   canDeleteAny,
   currentUserId,
 }: {
   clientId: string;
+  clientName: string;
   documents: ClientDocumentRow[];
   canDeleteAny: boolean;
   currentUserId: string;
@@ -60,68 +64,34 @@ export function ClientDocuments({
 
   return (
     <section className="space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-      <div>
-        <h2 className="text-lg font-semibold text-slate-900">
-          Documents & factures
-        </h2>
-        <p className="mt-1 text-sm text-slate-600">
-          Déposez les pièces par client — classement automatique et OCR des
-          factures (PDF texte ou images).
-        </p>
-      </div>
-
-      <form
-        action={uploadDocumentAction.bind(null, clientId)}
-        encType="multipart/form-data"
-        className="space-y-3 rounded-xl border border-dashed border-slate-300 bg-slate-50/80 p-4"
-      >
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <label
-            className="text-sm font-medium text-slate-700"
-            htmlFor="doc-file"
-          >
-            Fichier *
-          </label>
-          <input
-            id="doc-file"
-            name="file"
-            type="file"
-            required
-            accept=".pdf,image/jpeg,image/png,image/webp,.xlsx,.xls,.csv"
-            className="mt-1 block w-full text-sm text-slate-700 file:mr-3 file:rounded-lg file:border-0 file:bg-emerald-600 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-emerald-700"
-          />
-          <p className="mt-1 text-xs text-slate-500">
-            PDF, images, Excel ou CSV — 10 Mo max. L&apos;OCR extrait montant,
-            date, n° facture et SIRET.
+          <h2 className="text-lg font-semibold text-slate-900">
+            Coffre-fort — {clientName}
+          </h2>
+          <p className="mt-1 text-sm text-slate-600">
+            Stockage sécurisé des pièces du dossier : multi-dépôt, classement auto
+            et OCR facture.
           </p>
         </div>
-        <div>
-          <label
-            className="text-sm font-medium text-slate-700"
-            htmlFor="doc-label"
-          >
-            Libellé (optionnel)
-          </label>
-          <input
-            id="doc-label"
-            name="label"
-            type="text"
-            placeholder="ex. Facture fournisseur mars 2026"
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none ring-emerald-500/30 focus:ring-2"
-          />
-        </div>
-        <button
-          type="submit"
-          className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+        <Link
+          href="/documents"
+          className="text-sm font-medium text-emerald-700 hover:underline"
         >
-          Déposer le document
-        </button>
-      </form>
+          Vue globale →
+        </Link>
+      </div>
+
+      <DocumentUploadZone
+        action={uploadDocumentsBulkAction.bind(null, clientId)}
+        fixedClientId={clientId}
+        fixedClientName={clientName}
+      />
 
       {documents.length === 0 ? (
         <p className="text-sm text-slate-500">
-          Aucun document pour ce client. Uploadez une facture ou un
-          justificatif pour commencer.
+          Aucun document pour ce client. Déposez une facture PDF ou une photo pour
+          tester l&apos;OCR.
         </p>
       ) : (
         <div className="space-y-6">
@@ -142,21 +112,16 @@ export function ClientDocuments({
                       canDeleteAny || doc.uploadedById === currentUserId;
 
                     return (
-                      <li
-                        key={doc.id}
-                        className="bg-white px-4 py-3"
-                      >
+                      <li key={doc.id} className="bg-white px-4 py-3">
                         <div className="flex flex-wrap items-start justify-between gap-3">
                           <div className="min-w-0 flex-1">
                             <div className="flex flex-wrap items-center gap-2">
-                              <a
-                                href={`/api/documents/${doc.id}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
+                              <Link
+                                href={`/documents/${doc.id}`}
                                 className="truncate font-medium text-emerald-800 hover:underline"
                               >
                                 {doc.label ?? doc.fileName}
-                              </a>
+                              </Link>
                               <span
                                 className={`rounded-full px-2 py-0.5 text-xs font-medium ${categoryStyles[doc.category]}`}
                               >
@@ -173,18 +138,28 @@ export function ClientDocuments({
                             </p>
                             <DocumentOcrPanel doc={doc} />
                           </div>
-                          {canDelete && (
-                            <form
-                              action={deleteDocumentAction.bind(null, doc.id)}
+                          <div className="flex flex-col gap-1">
+                            <a
+                              href={`/api/documents/${doc.id}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="rounded-lg border border-slate-200 px-3 py-1.5 text-center text-xs font-medium text-slate-700 hover:bg-slate-50"
                             >
-                              <button
-                                type="submit"
-                                className="rounded-lg border border-rose-200 px-3 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-50"
+                              Ouvrir
+                            </a>
+                            {canDelete && (
+                              <form
+                                action={deleteDocumentAction.bind(null, doc.id)}
                               >
-                                Supprimer
-                              </button>
-                            </form>
-                          )}
+                                <button
+                                  type="submit"
+                                  className="w-full rounded-lg border border-rose-200 px-3 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-50"
+                                >
+                                  Supprimer
+                                </button>
+                              </form>
+                            )}
+                          </div>
                         </div>
                       </li>
                     );

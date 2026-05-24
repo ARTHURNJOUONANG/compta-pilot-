@@ -2,6 +2,7 @@ import { readFile } from "fs/promises";
 import { OcrStatus } from "@prisma/client";
 import { createWorker } from "tesseract.js";
 import { prisma } from "@/lib/prisma";
+import { formatEuro } from "@/lib/currency";
 import { documentFilePath } from "@/lib/documents";
 import { notifyOcrCompleted } from "@/lib/notifications";
 
@@ -256,9 +257,4 @@ export async function runOcrForDocument(documentId: string): Promise<void> {
   }
 }
 
-export function formatEuro(amount: number): string {
-  return new Intl.NumberFormat("fr-FR", {
-    style: "currency",
-    currency: "EUR",
-  }).format(amount);
-}
+export { formatEuro } from "@/lib/currency";

@@ -1,7 +1,7 @@
 import { OcrStatus } from "@prisma/client";
 import { ocrStatusLabel } from "@/lib/labels";
 import { formatDateFr } from "@/lib/dates";
-import { formatEuro } from "@/lib/ocr";
+import { formatEuro } from "@/lib/currency";
 import { reprocessOcrAction } from "@/actions/documents";
 
 const statusStyles: Record<OcrStatus, string> = {

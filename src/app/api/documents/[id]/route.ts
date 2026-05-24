@@ -1,16 +1,14 @@
 import { readFile } from "fs/promises";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getSessionUserId } from "@/lib/session";
+import { requireApiUser } from "@/lib/api-auth";
 import { documentFilePath } from "@/lib/documents";
 
 type Params = { params: Promise<{ id: string }> };
 
 export async function GET(_req: Request, { params }: Params) {
-  const userId = await getSessionUserId();
-  if (!userId) {
-    return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
-  }
+  const auth = await requireApiUser();
+  if (auth instanceof NextResponse) return auth;
 
   const { id } = await params;
   const doc = await prisma.document.findUnique({
@@ -36,9 +34,10 @@ export async function GET(_req: Request, { params }: Params) {
         "Content-Type": doc.mimeType,
         "Content-Disposition": `inline; filename="${encodeURIComponent(doc.fileName)}"`,
         "Content-Length": String(buffer.length),
+        "Cache-Control": "private, max-age=3600",
       },
     });
   } catch {
-    return NextResponse.json({ error: "Fichier absent" }, { status: 404 });
+    return NextResponse.json({ error: "Fichier absent sur le serveur" }, { status: 404 });
   }
 }

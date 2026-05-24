@@ -87,13 +87,14 @@ async function writeTemplateTo(targetPath: string): Promise<void> {
   writeFileSync(targetPath, bytes);
 }
 
-async function sqliteHasUserTable(): Promise<boolean> {
+async function sqliteHasRequiredTables(): Promise<boolean> {
   try {
     const rows = await prisma.$queryRaw<{ name: string }[]>`
       SELECT name FROM sqlite_master
-      WHERE type = 'table' AND name = 'User'
+      WHERE type = 'table'
+        AND name IN ('User', 'Client', 'Task', 'Document', 'Notification')
     `;
-    return rows.length > 0;
+    return rows.length === 5;
   } catch {
     return false;
   }
@@ -150,7 +151,7 @@ async function doEnsureSqliteDatabase(): Promise<void> {
     return;
   }
 
-  if (!(await sqliteHasUserTable())) {
+  if (!(await sqliteHasRequiredTables())) {
     await replaceDatabaseFile(filePath, url);
   }
 }

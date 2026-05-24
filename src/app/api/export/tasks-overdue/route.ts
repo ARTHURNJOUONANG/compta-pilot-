@@ -1,6 +1,6 @@
-import { TaskStatus } from "@prisma/client";
+import { Role, TaskStatus } from "@prisma/client";
 import { NextResponse } from "next/server";
-import { getSessionUser } from "@/lib/auth";
+import { requireApiRole, requireApiUser } from "@/lib/api-auth";
 import { buildCsv } from "@/lib/export-csv";
 import { formatDateFr } from "@/lib/dates";
 import { prisma } from "@/lib/prisma";
@@ -14,10 +14,11 @@ function startOfToday() {
 }
 
 export async function GET() {
-  const user = await getSessionUser();
-  if (!user) {
-    return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
-  }
+  const auth = await requireApiUser();
+  if (auth instanceof NextResponse) return auth;
+
+  const denied = requireApiRole(auth, [Role.DIRECTOR, Role.MANAGER]);
+  if (denied) return denied;
 
   const today = startOfToday();
   const tasks = await prisma.task.findMany({
