@@ -1,8 +1,10 @@
 import { execSync } from "node:child_process";
-import { mkdirSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, unlinkSync } from "node:fs";
 import path from "node:path";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
+
+const SQLITE_TEMPLATE = path.join(process.cwd(), "prisma", "vercel-empty.db");
 
 function resolveSqliteFilePath(databaseUrl: string): string | null {
   if (!databaseUrl.startsWith("file:")) return null;
@@ -28,6 +30,15 @@ function runDbPush(databaseUrl: string): void {
   });
 }
 
+function seedFromTemplate(targetPath: string): void {
+  if (!existsSync(SQLITE_TEMPLATE)) {
+    throw new Error(
+      `Base SQLite template introuvable (${SQLITE_TEMPLATE}). Exécutez: npm run db:template`,
+    );
+  }
+  copyFileSync(SQLITE_TEMPLATE, targetPath);
+}
+
 async function sqliteHasUserTable(): Promise<boolean> {
   try {
     const rows = await prisma.$queryRaw<{ name: string }[]>`
@@ -38,6 +49,17 @@ async function sqliteHasUserTable(): Promise<boolean> {
   } catch {
     return false;
   }
+}
+
+async function applySchema(filePath: string, databaseUrl: string): Promise<void> {
+  if (existsSync(filePath)) {
+    unlinkSync(filePath);
+  }
+  if (existsSync(SQLITE_TEMPLATE)) {
+    seedFromTemplate(filePath);
+    return;
+  }
+  runDbPush(databaseUrl);
 }
 
 async function doEnsureSqliteDatabase(): Promise<void> {
@@ -54,9 +76,8 @@ async function doEnsureSqliteDatabase(): Promise<void> {
     path.join(path.dirname(filePath), "uploads");
   mkdirSync(uploadsDir, { recursive: true });
 
-  // Fichier vide ou créé sans tables (cas fréquent sur Vercel /tmp).
   if (!(await sqliteHasUserTable())) {
-    runDbPush(url);
+    await applySchema(filePath, url);
   }
 }
 

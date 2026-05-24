@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import path from "node:path";
 import { NextResponse } from "next/server";
 import { ensureSqliteDatabase } from "@/lib/ensure-sqlite-database";
 import { prisma } from "@/lib/prisma";
@@ -12,6 +14,9 @@ export async function GET() {
       status: "ok",
       service: "compta-pilot",
       database: "connected",
+      templateDb: existsSync(
+        path.join(process.cwd(), "prisma", "vercel-empty.db"),
+      ),
       timestamp: new Date().toISOString(),
     });
   } catch (err) {

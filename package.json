@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "db:push": "prisma db push",
+    "db:template": "node scripts/generate-vercel-empty-db.mjs",
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio",
     "docker:init": "node -e \"const fs=require('fs');if(!fs.existsSync('.env.docker')){fs.copyFileSync('.env.docker.example','.env.docker');console.log('.env.docker créé');}else{console.log('.env.docker existe déjà');}\"",

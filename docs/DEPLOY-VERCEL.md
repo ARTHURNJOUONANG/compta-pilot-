@@ -21,11 +21,17 @@
 - La base est dans `/tmp` : **réinitialisée** à chaque redéploiement ou instance froide.
 - Convient pour une **démo** ; pour la production, utilisez PostgreSQL (Neon, Supabase) ou Docker (voir `DEPLOY.md`).
 
+## URL de production vs preview
+
+Utilisez l’URL **production** (`https://compta-pilot.vercel.app`), pas les URLs de preview
+(`*-arthurnjouonangs-projects.vercel.app`). Les previews peuvent renvoyer **401** sur
+`manifest.json` (protection de déploiement Vercel).
+
 ## Premier accès
 
 1. Déployer avec les variables ci-dessus.
 2. Ouvrir `https://votre-app.vercel.app/setup` pour créer le compte dirigeant.
-3. Vérifier `https://votre-app.vercel.app/api/health` → `"database": "connected"`.
+3. Vérifier `https://votre-app.vercel.app/api/health` → `"database": "connected"` et `"templateDb": true`.
 
 ## Après modification du code
 
