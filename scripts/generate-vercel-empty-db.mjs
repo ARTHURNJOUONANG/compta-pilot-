@@ -1,5 +1,5 @@
 import { execSync } from "node:child_process";
-import { existsSync, unlinkSync } from "node:fs";
+import { copyFileSync, existsSync, unlinkSync } from "node:fs";
 import path from "node:path";
 
 const dbPath = path.join("prisma", "vercel-empty.db");
@@ -11,4 +11,6 @@ execSync("npx prisma db push --skip-generate", {
   cwd: path.join(process.cwd(), "prisma"),
 });
 
-console.log(`Template créé : ${dbPath}`);
+const publicPath = path.join(process.cwd(), "public", "vercel-empty.db");
+copyFileSync(path.join(process.cwd(), dbPath), publicPath);
+console.log(`Templates créés : ${dbPath}, public/vercel-empty.db`);

@@ -4,7 +4,20 @@ import path from "node:path";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
-const SQLITE_TEMPLATE = path.join(process.cwd(), "prisma", "vercel-empty.db");
+function templateCandidates(): string[] {
+  const cwd = process.cwd();
+  return [
+    path.join(cwd, "public", "vercel-empty.db"),
+    path.join(cwd, "prisma", "vercel-empty.db"),
+  ];
+}
+
+export function resolveSqliteTemplatePath(): string | null {
+  for (const candidate of templateCandidates()) {
+    if (existsSync(candidate)) return candidate;
+  }
+  return null;
+}
 
 function resolveSqliteFilePath(databaseUrl: string): string | null {
   if (!databaseUrl.startsWith("file:")) return null;
@@ -21,7 +34,7 @@ function resolveSqliteFilePath(databaseUrl: string): string | null {
 
 let initPromise: Promise<void> | null = null;
 
-function runDbPush(databaseUrl: string): void {
+function runDbPushLocal(databaseUrl: string): void {
   execSync("npx prisma db push --skip-generate --accept-data-loss", {
     env: { ...process.env, DATABASE_URL: databaseUrl },
     stdio: "pipe",
@@ -31,12 +44,14 @@ function runDbPush(databaseUrl: string): void {
 }
 
 function seedFromTemplate(targetPath: string): void {
-  if (!existsSync(SQLITE_TEMPLATE)) {
+  const template = resolveSqliteTemplatePath();
+  if (!template) {
+    const searched = templateCandidates().join(", ");
     throw new Error(
-      `Base SQLite template introuvable (${SQLITE_TEMPLATE}). Exécutez: npm run db:template`,
+      `Base SQLite template introuvable. Chemins testés : ${searched}. Exécutez: npm run db:template`,
     );
   }
-  copyFileSync(SQLITE_TEMPLATE, targetPath);
+  copyFileSync(template, targetPath);
 }
 
 async function sqliteHasUserTable(): Promise<boolean> {
@@ -55,11 +70,21 @@ async function applySchema(filePath: string, databaseUrl: string): Promise<void>
   if (existsSync(filePath)) {
     unlinkSync(filePath);
   }
-  if (existsSync(SQLITE_TEMPLATE)) {
+
+  const template = resolveSqliteTemplatePath();
+  if (template) {
     seedFromTemplate(filePath);
     return;
   }
-  runDbPush(databaseUrl);
+
+  // npx prisma ne fonctionne pas sur Vercel (sandbox serverless).
+  if (process.env.VERCEL) {
+    throw new Error(
+      "Template SQLite absent du déploiement Vercel (public/vercel-empty.db).",
+    );
+  }
+
+  runDbPushLocal(databaseUrl);
 }
 
 async function doEnsureSqliteDatabase(): Promise<void> {
