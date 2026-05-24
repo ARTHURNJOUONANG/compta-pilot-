@@ -1,5 +1,12 @@
 import { execSync } from "node:child_process";
-import { copyFileSync, existsSync, mkdirSync, unlinkSync } from "node:fs";
+import {
+  copyFileSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  unlinkSync,
+  writeFileSync,
+} from "node:fs";
 import path from "node:path";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -43,15 +50,41 @@ function runDbPushLocal(databaseUrl: string): void {
   });
 }
 
-function seedFromTemplate(targetPath: string): void {
-  const template = resolveSqliteTemplatePath();
-  if (!template) {
-    const searched = templateCandidates().join(", ");
-    throw new Error(
-      `Base SQLite template introuvable. Chemins testés : ${searched}. Exécutez: npm run db:template`,
-    );
+async function loadTemplateBytes(): Promise<Buffer> {
+  const local = resolveSqliteTemplatePath();
+  if (local) {
+    return readFileSync(local);
   }
-  copyFileSync(template, targetPath);
+
+  const bases = [
+    process.env.APP_URL?.replace(/\/$/, ""),
+    process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : undefined,
+  ].filter(Boolean) as string[];
+
+  for (const base of bases) {
+    try {
+      const res = await fetch(`${base}/vercel-empty.db`, {
+        cache: "no-store",
+      });
+      if (res.ok) {
+        return Buffer.from(await res.arrayBuffer());
+      }
+    } catch {
+      // essayer la base suivante
+    }
+  }
+
+  const searched = templateCandidates().join(", ");
+  throw new Error(
+    `Base SQLite template introuvable (${searched}) et fetch /vercel-empty.db échoué.`,
+  );
+}
+
+async function writeTemplateTo(targetPath: string): Promise<void> {
+  const bytes = await loadTemplateBytes();
+  writeFileSync(targetPath, bytes);
 }
 
 async function sqliteHasUserTable(): Promise<boolean> {
@@ -66,22 +99,25 @@ async function sqliteHasUserTable(): Promise<boolean> {
   }
 }
 
-async function applySchema(filePath: string, databaseUrl: string): Promise<void> {
+async function replaceDatabaseFile(
+  filePath: string,
+  databaseUrl: string,
+): Promise<void> {
+  await prisma.$disconnect();
+
   if (existsSync(filePath)) {
     unlinkSync(filePath);
   }
 
-  const template = resolveSqliteTemplatePath();
-  if (template) {
-    seedFromTemplate(filePath);
+  const localTemplate = resolveSqliteTemplatePath();
+  if (localTemplate) {
+    copyFileSync(localTemplate, filePath);
     return;
   }
 
-  // npx prisma ne fonctionne pas sur Vercel (sandbox serverless).
   if (process.env.VERCEL) {
-    throw new Error(
-      "Template SQLite absent du déploiement Vercel (public/vercel-empty.db).",
-    );
+    await writeTemplateTo(filePath);
+    return;
   }
 
   runDbPushLocal(databaseUrl);
@@ -101,8 +137,21 @@ async function doEnsureSqliteDatabase(): Promise<void> {
     path.join(path.dirname(filePath), "uploads");
   mkdirSync(uploadsDir, { recursive: true });
 
+  // Copier AVANT toute requête Prisma si le fichier n'existe pas encore.
+  if (!existsSync(filePath)) {
+    const localTemplate = resolveSqliteTemplatePath();
+    if (localTemplate) {
+      copyFileSync(localTemplate, filePath);
+    } else if (process.env.VERCEL) {
+      await writeTemplateTo(filePath);
+    } else {
+      runDbPushLocal(url);
+    }
+    return;
+  }
+
   if (!(await sqliteHasUserTable())) {
-    await applySchema(filePath, url);
+    await replaceDatabaseFile(filePath, url);
   }
 }
 

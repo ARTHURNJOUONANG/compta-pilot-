@@ -24,6 +24,7 @@ export async function hasAnyUser(): Promise<boolean> {
   } catch (err) {
     if (!isMissingTableError(err)) throw err;
     resetSqliteDatabaseInit();
+    await prisma.$disconnect();
     await ensureSqliteDatabase();
     const count = await prisma.user.count();
     return count > 0;
