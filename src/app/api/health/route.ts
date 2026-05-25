@@ -14,6 +14,7 @@ const REQUIRED_TABLES = [
   "Task",
   "Document",
   "Notification",
+  "Contract",
 ] as const;
 
 export async function GET() {
@@ -23,7 +24,7 @@ export async function GET() {
 
     const tables = await prisma.$queryRaw<{ name: string }[]>`
       SELECT name FROM sqlite_master
-      WHERE type = 'table' AND name IN ('User', 'Client', 'Task', 'Document', 'Notification')
+      WHERE type = 'table' AND name IN ('User', 'Client', 'Task', 'Document', 'Notification', 'Contract')
     `;
     const tableNames = new Set(tables.map((t) => t.name));
     const missing = REQUIRED_TABLES.filter((t) => !tableNames.has(t));
@@ -41,11 +42,12 @@ export async function GET() {
       );
     }
 
-    const [users, clients, tasks, documents] = await Promise.all([
+    const [users, clients, tasks, documents, contracts] = await Promise.all([
       prisma.user.count(),
       prisma.client.count(),
       prisma.task.count(),
       prisma.document.count(),
+      prisma.contract.count(),
     ]);
 
     return NextResponse.json({
@@ -53,7 +55,7 @@ export async function GET() {
       service: "compta-pilot",
       database: "connected",
       schema: "complete",
-      counts: { users, clients, tasks, documents },
+      counts: { users, clients, tasks, documents, contracts },
       email: isEmailConfigured() ? "configured" : "dev_log_only",
       templateDb: resolveSqliteTemplatePath(),
       timestamp: new Date().toISOString(),

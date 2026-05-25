@@ -234,7 +234,7 @@ export default async function DocumentsPage({ searchParams }: Props) {
                 <td className="px-4 py-3">
                   <Link
                     href={`/documents/${doc.id}`}
-                    className="font-medium text-emerald-800 hover:underline"
+                    className="font-medium text-theme-link hover:underline"
                   >
                     {doc.label ?? doc.fileName}
                   </Link>
@@ -317,7 +317,7 @@ function FilterChip({
       href={href}
       className={`rounded-full px-3 py-1.5 text-sm font-medium ${
         active
-          ? "bg-emerald-600 text-white"
+          ? "ui-btn ui-btn-primary"
           : "bg-slate-100 text-slate-700 hover:bg-slate-200"
       }`}
     >

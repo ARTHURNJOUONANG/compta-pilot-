@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { ensureAppReady, hasAnyUser } from "@/lib/app-config";
 import { getSessionUser } from "@/lib/auth";
+import { clearSession } from "@/lib/session";
 import { getUnreadCount } from "@/lib/notifications";
 import { AppShell } from "@/components/app-shell";
 
@@ -15,7 +16,10 @@ export default async function DashboardLayout({
   if (!(await hasAnyUser())) redirect("/setup");
 
   const user = await getSessionUser();
-  if (!user) redirect("/login");
+  if (!user) {
+    await clearSession();
+    redirect("/login");
+  }
 
   const unreadCount = await getUnreadCount(user.id);
 

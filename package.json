@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "db:push": "prisma db push",
+    "db:reset": "node scripts/reset-database.mjs",
     "db:template": "node scripts/generate-vercel-empty-db.mjs",
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio",
@@ -23,12 +24,14 @@
   },
   "dependencies": {
     "@prisma/client": "^6.8.2",
-    "prisma": "^6.8.2",
+    "@types/pdfkit": "^0.17.6",
     "bcryptjs": "^2.4.3",
     "canvas": "^3.2.3",
     "next": "16.2.1",
     "nodemailer": "^8.0.7",
     "pdf-parse": "^2.4.5",
+    "pdfkit": "^0.18.0",
+    "prisma": "^6.8.2",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "tesseract.js": "^7.0.0"

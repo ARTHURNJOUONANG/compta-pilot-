@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
 import { hasAnyUser } from "@/lib/app-config";
+import { SetupAlreadyConfigured } from "./already-configured";
 
 export const dynamic = "force-dynamic";
 
@@ -9,7 +9,7 @@ export default async function SetupLayout({
   children: React.ReactNode;
 }) {
   if (await hasAnyUser()) {
-    redirect("/login");
+    return <SetupAlreadyConfigured />;
   }
   return children;
 }

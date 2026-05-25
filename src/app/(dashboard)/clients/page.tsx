@@ -1,5 +1,8 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { ButtonLink } from "@/components/ui/button";
+import { PageHeader } from "@/components/ui/page-header";
+import { Panel } from "@/components/ui/stat-card";
 
 type Props = { searchParams?: Promise<{ q?: string }> };
 
@@ -25,51 +28,40 @@ export default async function ClientsPage({ searchParams }: Props) {
 
   return (
     <div className="mx-auto max-w-5xl space-y-8">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold text-slate-900">Clients</h1>
-          <p className="mt-1 text-sm text-slate-600">
-            Dossiers suivis par le cabinet — accès rapide aux tâches liées.
-          </p>
-        </div>
-        <Link
-          href="/clients/new"
-          className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-emerald-700"
-        >
-          Nouveau client
-        </Link>
-      </div>
+      <PageHeader
+        title="Clients"
+        description="Dossiers suivis par le cabinet — accès rapide aux tâches liées."
+        action={<ButtonLink href="/clients/new">Nouveau client</ButtonLink>}
+      />
 
-      <form method="get" className="flex gap-2">
+      <form method="get" className="animate-fade-in-up flex gap-2 stagger-2">
         <input
           type="search"
           name="q"
           defaultValue={q}
           placeholder="Rechercher par nom, SIRET ou email…"
-          className="flex-1 rounded-xl border border-slate-300 px-4 py-2 text-sm outline-none ring-emerald-500/30 focus:ring-2"
+          className="ui-input flex-1"
         />
-        <button
-          type="submit"
-          className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
-        >
+        <button type="submit" className="ui-btn ui-btn-secondary">
           Rechercher
         </button>
         {q && (
-          <Link
-            href="/clients"
-            className="rounded-xl border border-slate-300 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50"
-          >
+          <Link href="/clients" className="ui-btn ui-btn-ghost">
             Effacer
           </Link>
         )}
       </form>
 
-      <ul className="divide-y divide-slate-200 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        {clients.map((c) => (
-          <li key={c.id}>
+      <Panel className="divide-y divide-slate-100">
+        {clients.map((c, i) => (
+          <div
+            key={c.id}
+            className="animate-fade-in-up"
+            style={{ animationDelay: `${i * 40}ms` }}
+          >
             <Link
               href={`/clients/${c.id}`}
-              className="flex items-center justify-between gap-4 px-5 py-4 transition hover:bg-slate-50"
+              className="flex items-center justify-between gap-4 px-5 py-4 transition-all duration-200 hover:bg-emerald-50"
             >
               <div>
                 <p className="font-medium text-slate-900">{c.name}</p>
@@ -87,9 +79,9 @@ export default async function ClientsPage({ searchParams }: Props) {
                 </span>
               </div>
             </Link>
-          </li>
+          </div>
         ))}
-      </ul>
+      </Panel>
       {clients.length === 0 && (
         <p className="text-sm text-slate-500">
           {q

@@ -12,6 +12,10 @@ import { PriorityBadge, StatusBadge } from "@/components/badge";
 import { FlashBanner } from "@/components/flash-banner";
 import { formatDateFr } from "@/lib/dates";
 import { ClientDocuments } from "@/components/client-documents";
+import {
+  contractStatusClass,
+  contractStatusLabel,
+} from "@/lib/contracts";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -42,6 +46,10 @@ export default async function ClientDetailPage({ params, searchParams }: Props) 
       documents: {
         orderBy: { createdAt: "desc" },
         include: { uploadedBy: { select: { name: true } } },
+      },
+      contracts: {
+        orderBy: { updatedAt: "desc" },
+        take: 8,
       },
     },
   });
@@ -89,7 +97,7 @@ export default async function ClientDetailPage({ params, searchParams }: Props) 
       <div>
         <Link
           href="/clients"
-          className="text-sm font-medium text-emerald-700 hover:underline"
+          className="text-sm font-medium text-theme-link hover:underline"
         >
           ← Clients
         </Link>
@@ -106,7 +114,7 @@ export default async function ClientDetailPage({ params, searchParams }: Props) 
         <form action={regenerateObligationsAction.bind(null, client.id)}>
           <button
             type="submit"
-            className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+            className="ui-btn ui-btn-primary px-4 py-2 text-sm"
           >
             Régénérer les obligations
           </button>
@@ -138,7 +146,7 @@ export default async function ClientDetailPage({ params, searchParams }: Props) 
               name="name"
               required
               defaultValue={client.name}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none ring-emerald-500/30 focus:ring-2"
+              className="ui-input mt-1"
             />
           </div>
           <div>
@@ -149,7 +157,7 @@ export default async function ClientDetailPage({ params, searchParams }: Props) 
               id="siret"
               name="siret"
               defaultValue={client.siret ?? ""}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none ring-emerald-500/30 focus:ring-2"
+              className="ui-input mt-1"
             />
           </div>
           <div>
@@ -161,7 +169,7 @@ export default async function ClientDetailPage({ params, searchParams }: Props) 
               name="email"
               type="email"
               defaultValue={client.email ?? ""}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none ring-emerald-500/30 focus:ring-2"
+              className="ui-input mt-1"
             />
           </div>
           <div>
@@ -172,7 +180,7 @@ export default async function ClientDetailPage({ params, searchParams }: Props) 
               id="phone"
               name="phone"
               defaultValue={client.phone ?? ""}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none ring-emerald-500/30 focus:ring-2"
+              className="ui-input mt-1"
             />
           </div>
           <div>
@@ -184,12 +192,12 @@ export default async function ClientDetailPage({ params, searchParams }: Props) 
               name="notes"
               rows={3}
               defaultValue={client.notes ?? ""}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none ring-emerald-500/30 focus:ring-2"
+              className="ui-input mt-1"
             />
           </div>
           <button
             type="submit"
-            className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+            className="ui-btn ui-btn-dark"
           >
             Mettre à jour
           </button>
@@ -200,7 +208,7 @@ export default async function ClientDetailPage({ params, searchParams }: Props) 
             <h2 className="text-lg font-semibold text-slate-900">Tâches liées</h2>
             <Link
               href={`/tasks/new?clientId=${client.id}`}
-              className="rounded-xl bg-emerald-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-emerald-700"
+              className="ui-btn ui-btn-primary px-3 py-1.5 text-sm"
             >
               Nouvelle tâche
             </Link>
@@ -230,6 +238,45 @@ export default async function ClientDetailPage({ params, searchParams }: Props) 
           )}
         </div>
       </div>
+
+      <section className="space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-lg font-semibold text-slate-900">Contrats</h2>
+          <Link
+            href={`/contrats/new?clientId=${client.id}`}
+            className="ui-btn ui-btn-primary px-3 py-1.5 text-sm"
+          >
+            Nouveau contrat
+          </Link>
+        </div>
+        <ul className="divide-y divide-slate-200 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          {client.contracts.map((c) => (
+            <li key={c.id}>
+              <Link
+                href={`/contrats/${c.id}`}
+                className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 transition hover:bg-slate-50"
+              >
+                <span className="font-medium text-slate-900">{c.title}</span>
+                <span
+                  className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1 ring-inset ${contractStatusClass(c.status)}`}
+                >
+                  {contractStatusLabel(c.status)}
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+        {client.contracts.length === 0 && (
+          <p className="text-sm text-slate-500">
+            Aucun contrat pour ce client. Créez une lettre de mission ou une convention.
+          </p>
+        )}
+        {client.contracts.length > 0 && (
+          <Link href="/contrats" className="text-sm font-medium text-theme-link hover:underline">
+            Voir tous les contrats →
+          </Link>
+        )}
+      </section>
 
       {user && (
         <ClientDocuments

@@ -25,7 +25,7 @@ export default async function NewTaskPage({ searchParams }: Props) {
       <div>
         <Link
           href="/tasks"
-          className="text-sm font-medium text-emerald-700 hover:underline"
+          className="text-sm font-medium text-theme-link hover:underline"
         >
           ← Tâches
         </Link>
@@ -168,7 +168,7 @@ export default async function NewTaskPage({ searchParams }: Props) {
         </div>
         <button
           type="submit"
-          className="w-full rounded-xl bg-emerald-600 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700"
+          className="w-full rounded-xl ui-btn ui-btn-primary"
         >
           Créer la tâche
         </button>

@@ -63,7 +63,7 @@ export default async function TaskDetailPage({ params, searchParams }: Props) {
       <div>
         <Link
           href="/tasks"
-          className="text-sm font-medium text-emerald-700 hover:underline"
+          className="text-sm font-medium text-theme-link hover:underline"
         >
           ← Tâches
         </Link>
@@ -76,7 +76,7 @@ export default async function TaskDetailPage({ params, searchParams }: Props) {
           Client{" "}
           <Link
             href={`/clients/${task.client.id}`}
-            className="font-medium text-emerald-700 hover:underline"
+            className="font-medium text-theme-link hover:underline"
           >
             {task.client.name}
           </Link>
@@ -102,7 +102,7 @@ export default async function TaskDetailPage({ params, searchParams }: Props) {
             <form action={approveTaskAction.bind(null, task.id)}>
               <button
                 type="submit"
-                className="rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700"
+                className="ui-btn ui-btn-primary px-4 py-2.5 text-sm"
               >
                 Valider et clôturer
               </button>
@@ -135,7 +135,7 @@ export default async function TaskDetailPage({ params, searchParams }: Props) {
             name="title"
             required
             defaultValue={task.title}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none ring-emerald-500/30 focus:ring-2"
+            className="ui-input mt-1"
           />
         </div>
         <div>
@@ -147,7 +147,7 @@ export default async function TaskDetailPage({ params, searchParams }: Props) {
             name="clientId"
             required
             defaultValue={task.clientId}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none ring-emerald-500/30 focus:ring-2"
+            className="ui-input mt-1"
           >
             {clients.map((c) => (
               <option key={c.id} value={c.id}>
@@ -164,7 +164,7 @@ export default async function TaskDetailPage({ params, searchParams }: Props) {
             id="category"
             name="category"
             defaultValue={task.category}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none ring-emerald-500/30 focus:ring-2"
+            className="ui-input mt-1"
           />
         </div>
         <div>
@@ -179,7 +179,7 @@ export default async function TaskDetailPage({ params, searchParams }: Props) {
             name="description"
             rows={3}
             defaultValue={task.description ?? ""}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none ring-emerald-500/30 focus:ring-2"
+            className="ui-input mt-1"
           />
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -191,7 +191,7 @@ export default async function TaskDetailPage({ params, searchParams }: Props) {
               id="status"
               name="status"
               defaultValue={task.status}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none ring-emerald-500/30 focus:ring-2"
+              className="ui-input mt-1"
             >
               {Object.values(TaskStatus).map((s) => (
                 <option key={s} value={s}>
@@ -211,7 +211,7 @@ export default async function TaskDetailPage({ params, searchParams }: Props) {
               id="priority"
               name="priority"
               defaultValue={task.priority}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none ring-emerald-500/30 focus:ring-2"
+              className="ui-input mt-1"
             >
               {Object.values(TaskPriority).map((p) => (
                 <option key={p} value={p}>
@@ -230,7 +230,7 @@ export default async function TaskDetailPage({ params, searchParams }: Props) {
             name="dueDate"
             type="date"
             defaultValue={task.dueDate.toISOString().slice(0, 10)}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none ring-emerald-500/30 focus:ring-2"
+            className="ui-input mt-1"
           />
         </div>
         <div>
@@ -247,7 +247,7 @@ export default async function TaskDetailPage({ params, searchParams }: Props) {
             min={1}
             max={maxValidationStep}
             defaultValue={Math.min(task.validationStep, maxValidationStep)}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none ring-emerald-500/30 focus:ring-2"
+            className="ui-input mt-1"
           />
         </div>
         <div>
@@ -258,7 +258,7 @@ export default async function TaskDetailPage({ params, searchParams }: Props) {
             id="assigneeId"
             name="assigneeId"
             defaultValue={task.assigneeId ?? ""}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none ring-emerald-500/30 focus:ring-2"
+            className="ui-input mt-1"
           >
             <option value="">— Non assigné —</option>
             {users.map((u) => (
@@ -270,7 +270,7 @@ export default async function TaskDetailPage({ params, searchParams }: Props) {
         </div>
         <button
           type="submit"
-          className="w-full rounded-xl bg-slate-900 py-2.5 text-sm font-semibold text-white hover:bg-slate-800"
+          className="ui-btn ui-btn-dark w-full py-2.5"
         >
           Enregistrer
         </button>
@@ -280,7 +280,7 @@ export default async function TaskDetailPage({ params, searchParams }: Props) {
         <form action={smartAssignTaskAction.bind(null, task.id)}>
           <button
             type="submit"
-            className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+            className="ui-btn ui-btn-primary px-4 py-2 text-sm"
           >
             Réassigner intelligemment
           </button>

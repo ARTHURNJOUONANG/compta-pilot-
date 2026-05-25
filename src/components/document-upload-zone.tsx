@@ -25,10 +25,10 @@ export function DocumentUploadZone({
   return (
     <form
       action={action}
-      className={`space-y-4 rounded-2xl border-2 border-dashed p-5 transition ${
+      className={`ui-card space-y-4 border-2 border-dashed p-5 transition-all duration-300 ${
         dragOver
-          ? "border-emerald-500 bg-emerald-50/80"
-          : "border-slate-300 bg-slate-50/60"
+          ? "scale-[1.01] border-emerald-500 bg-emerald-500/15 shadow-lg shadow-emerald-500/20"
+          : "border-slate-200 bg-gradient-to-br from-white to-slate-50 hover:border-emerald-400/50"
       }`}
       onDragOver={(e) => {
         e.preventDefault();
@@ -70,7 +70,7 @@ export function DocumentUploadZone({
             name="clientId"
             required
             defaultValue=""
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none ring-emerald-500/30 focus:ring-2"
+            className="ui-input mt-1"
           >
             <option value="" disabled>
               Choisir un client…
@@ -113,10 +113,9 @@ export function DocumentUploadZone({
           className="mt-2 block w-full text-sm text-slate-700 file:mr-3 file:rounded-lg file:border-0 file:bg-emerald-600 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-emerald-700"
         />
         {fileCount > 0 && (
-          <p className="mt-1 text-xs text-emerald-800">
+          <p className="mt-1 text-xs text-emerald-600">
             {fileCount} fichier{fileCount > 1 ? "s" : ""} sélectionné
-            {fileCount > 1 ? "s" : ""}
-            {" "}— classement et OCR automatiques.
+            {fileCount > 1 ? "s" : ""} — classement et OCR automatiques.
           </p>
         )}
       </div>
@@ -133,14 +132,11 @@ export function DocumentUploadZone({
           name="label"
           type="text"
           placeholder="ex. Pièces TVA T1 2026"
-          className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none ring-emerald-500/30 focus:ring-2"
+          className="ui-input mt-1"
         />
       </div>
 
-      <button
-        type="submit"
-        className="w-full rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700"
-      >
+      <button type="submit" className="ui-btn ui-btn-primary w-full py-2.5">
         Déposer dans le coffre-fort
       </button>
     </form>

@@ -3,6 +3,9 @@ import { Role, TaskStatus } from "@prisma/client";
 import { getSessionUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { PriorityBadge, StatusBadge } from "@/components/badge";
+import { ButtonLink } from "@/components/ui/button";
+import { PageHeader } from "@/components/ui/page-header";
+import { Panel } from "@/components/ui/stat-card";
 import { formatDateFr } from "@/lib/dates";
 
 type Search = { searchParams?: Promise<{ status?: string; filter?: string }> };
@@ -74,41 +77,30 @@ export default async function TasksPage({ searchParams }: Search) {
 
   return (
     <div className="mx-auto max-w-6xl space-y-8">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold text-slate-900">Tâches</h1>
-          <p className="mt-1 text-sm text-slate-600">
-            Suivi des obligations : TVA, liasse, paie, bilan — avec statuts et
-            validation.
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {canExport && (
-            <a
-              href="/api/export/tasks-overdue"
-              className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-800 hover:bg-slate-50"
-            >
-              Export CSV retards
-            </a>
-          )}
-          <Link
-            href="/tasks/new"
-            className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-emerald-700"
-          >
-            Nouvelle tâche
-          </Link>
-        </div>
-      </div>
+      <PageHeader
+        title="Tâches"
+        description="Suivi des obligations : TVA, liasse, paie, bilan — avec statuts et validation."
+        action={
+          <div className="flex flex-wrap gap-2">
+            {canExport && (
+              <a href="/api/export/tasks-overdue" className="ui-btn ui-btn-secondary">
+                Export CSV retards
+              </a>
+            )}
+            <ButtonLink href="/tasks/new">Nouvelle tâche</ButtonLink>
+          </div>
+        }
+      />
 
-      <div className="flex flex-wrap gap-2">
+      <div className="animate-fade-in-up flex flex-wrap gap-2 stagger-2">
         {filters.map((f) => (
           <Link
             key={f.href}
             href={f.href}
-            className={`rounded-full px-3 py-1 text-sm font-medium ${
+            className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition-all duration-200 ${
               f.active
-                ? "bg-slate-900 text-white"
-                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                ? "nav-link-active shadow-sm"
+                : "bg-white text-slate-700 ring-1 ring-slate-200 hover:bg-slate-50"
             }`}
           >
             {f.label}
@@ -116,7 +108,7 @@ export default async function TasksPage({ searchParams }: Search) {
         ))}
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <Panel className="overflow-hidden">
         <table className="min-w-full text-left text-sm">
           <thead className="bg-slate-50 text-xs font-semibold uppercase text-slate-500">
             <tr>
@@ -180,7 +172,7 @@ export default async function TasksPage({ searchParams }: Search) {
             Aucune tâche pour ce filtre.
           </p>
         )}
-      </div>
+      </Panel>
     </div>
   );
 }

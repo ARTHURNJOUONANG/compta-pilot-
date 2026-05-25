@@ -47,7 +47,7 @@ export default async function DocumentDetailPage({ params, searchParams }: Props
         <div>
           <Link
             href="/documents"
-            className="text-sm font-medium text-emerald-700 hover:underline"
+            className="text-sm font-medium text-theme-link hover:underline"
           >
             ← Coffre-fort
           </Link>
@@ -57,7 +57,7 @@ export default async function DocumentDetailPage({ params, searchParams }: Props
           <p className="mt-1 text-sm text-slate-600">
             <Link
               href={`/clients/${doc.client.id}`}
-              className="font-medium text-emerald-800 hover:underline"
+              className="font-medium text-theme-link hover:underline"
             >
               {doc.client.name}
             </Link>
@@ -71,7 +71,7 @@ export default async function DocumentDetailPage({ params, searchParams }: Props
           href={`/api/documents/${doc.id}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+          className="ui-btn ui-btn-primary px-4 py-2 text-sm"
         >
           Ouvrir / télécharger
         </a>
@@ -112,7 +112,7 @@ export default async function DocumentDetailPage({ params, searchParams }: Props
               id="label"
               name="label"
               defaultValue={doc.label ?? ""}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none ring-emerald-500/30 focus:ring-2"
+              className="ui-input mt-1"
             />
           </div>
           <div>
@@ -137,7 +137,7 @@ export default async function DocumentDetailPage({ params, searchParams }: Props
           </p>
           <button
             type="submit"
-            className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+            className="ui-btn ui-btn-dark"
           >
             Enregistrer
           </button>

@@ -120,7 +120,7 @@ export default async function EquipePage({ searchParams }: Props) {
           </div>
           <button
             type="submit"
-            className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+            className="rounded-xl ui-btn ui-btn-primary"
           >
             Créer le compte
           </button>
@@ -179,7 +179,7 @@ export default async function EquipePage({ searchParams }: Props) {
                       <span
                         className={
                           perf.onTimeRate >= 80
-                            ? "font-medium text-emerald-800"
+                            ? "font-medium text-emerald-700"
                             : perf.onTimeRate >= 60
                               ? "text-amber-800"
                               : "font-medium text-rose-700"
@@ -204,7 +204,7 @@ export default async function EquipePage({ searchParams }: Props) {
                     <span
                       className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${
                         u.reliabilityScore >= 85
-                          ? "bg-emerald-100 text-emerald-900"
+                          ? "bg-emerald-100 text-emerald-700"
                           : u.reliabilityScore >= 70
                             ? "bg-amber-100 text-amber-900"
                             : "bg-rose-100 text-rose-900"

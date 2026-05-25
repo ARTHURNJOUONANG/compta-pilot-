@@ -5,13 +5,15 @@ import { getSessionUser } from "@/lib/auth";
 import { syncOverdueNotifications } from "@/lib/notifications";
 import { getAssignmentSuggestions } from "@/lib/scoring";
 import { PriorityBadge, StatusBadge } from "@/components/badge";
-import { DemoLoadBanner } from "@/components/demo-load-banner";
 import { FlashBanner } from "@/components/flash-banner";
+import { ButtonLink } from "@/components/ui/button";
+import { PageHeader } from "@/components/ui/page-header";
+import { Panel, StatCard } from "@/components/ui/stat-card";
 import { runMonthlyTvaAction } from "@/actions/obligations";
 import { formatDateFr } from "@/lib/dates";
 
 type Props = {
-  searchParams: Promise<{ monthlyTva?: string; demoLoaded?: string }>;
+  searchParams: Promise<{ monthlyTva?: string }>;
 };
 
 function startOfToday() {
@@ -116,23 +118,10 @@ export default async function DashboardPage({ searchParams }: Props) {
 
   return (
     <div className="mx-auto max-w-6xl space-y-10">
-      <header className="space-y-2">
-        <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
-          Vue d&apos;ensemble
-        </h1>
-        <p className="max-w-2xl text-sm text-slate-600">
-          Vision 360° du cabinet : clients, charge, retards et validation des
-          dossiers en quelques secondes.
-        </p>
-      </header>
-
-      {user && (
-        <DemoLoadBanner
-          user={user}
-          clientCount={clientCount}
-          showSuccess={sp.demoLoaded === "1"}
-        />
-      )}
+      <PageHeader
+        title="Vue d'ensemble"
+        description="Vision 360° du cabinet : clients, charge, retards et validation des dossiers en quelques secondes."
+      />
 
       {!Number.isNaN(monthlyCreated) && sp.monthlyTva !== undefined && (
         <FlashBanner
@@ -146,30 +135,21 @@ export default async function DashboardPage({ searchParams }: Props) {
       )}
 
       {canRunMonthly && (
-        <section className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-emerald-200 bg-emerald-50/60 px-4 py-3">
-          <p className="text-sm text-emerald-950">
+        <section className="animate-fade-in-up ui-card flex flex-wrap items-center justify-between gap-3 border-emerald-200 bg-gradient-to-r from-emerald-50 to-teal-50 px-5 py-4">
+          <p className="text-sm text-emerald-900">
             <span className="font-semibold">Automatisation mensuelle</span> —
             lance la TVA du mois pour chaque client (sans doublon).
           </p>
           <div className="flex flex-wrap gap-2">
             <form action={runMonthlyTvaAction}>
-              <button
-                type="submit"
-                className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
-              >
+              <button type="submit" className="ui-btn ui-btn-primary">
                 Générer TVA du mois
               </button>
             </form>
-            <Link
-              href="/rapport"
-              className="rounded-xl border border-emerald-300 bg-white px-4 py-2 text-sm font-medium text-emerald-900 hover:bg-emerald-50"
-            >
+            <ButtonLink href="/rapport" variant="secondary">
               Rapport hebdo
-            </Link>
-            <a
-              href="/api/export/tasks-overdue"
-              className="rounded-xl border border-emerald-300 bg-white px-4 py-2 text-sm font-medium text-emerald-900 hover:bg-emerald-50"
-            >
+            </ButtonLink>
+            <a href="/api/export/tasks-overdue" className="ui-btn ui-btn-secondary">
               Export CSV retards
             </a>
           </div>
@@ -177,23 +157,15 @@ export default async function DashboardPage({ searchParams }: Props) {
       )}
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {cards.map((c) => (
-          <div
+        {cards.map((c, i) => (
+          <StatCard
             key={c.label}
-            className={`rounded-2xl border p-5 shadow-sm ${
-              c.danger
-                ? "border-rose-200 bg-rose-50/80"
-                : "border-slate-200 bg-white"
-            }`}
-          >
-            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
-              {c.label}
-            </p>
-            <p className="mt-2 text-3xl font-semibold tabular-nums text-slate-900">
-              {c.value}
-            </p>
-            <p className="mt-1 text-xs text-slate-500">{c.hint}</p>
-          </div>
+            label={c.label}
+            value={c.value}
+            hint={c.hint}
+            danger={c.danger}
+            delay={(i + 1) * 80}
+          />
         ))}
       </section>
 
@@ -217,7 +189,7 @@ export default async function DashboardPage({ searchParams }: Props) {
                 {s.href && (
                   <Link
                     href={s.href}
-                    className="mt-1 inline-block text-xs font-medium text-emerald-800 hover:underline"
+                    className="mt-1 inline-block text-xs font-medium text-emerald-700 hover:underline"
                   >
                     Agir →
                   </Link>
@@ -234,7 +206,7 @@ export default async function DashboardPage({ searchParams }: Props) {
             <h2 className="text-lg font-semibold text-slate-900">Alertes</h2>
             <Link
               href="/notifications"
-              className="text-sm font-medium text-emerald-700 hover:underline"
+              className="text-sm font-medium text-theme-link hover:underline"
             >
               Toutes les notifications
             </Link>
@@ -249,7 +221,7 @@ export default async function DashboardPage({ searchParams }: Props) {
                 {a.taskId && (
                   <Link
                     href={`/tasks/${a.taskId}`}
-                    className="mt-1 inline-block text-xs font-medium text-emerald-800 hover:underline"
+                    className="mt-1 inline-block text-xs font-medium text-emerald-700 hover:underline"
                   >
                     Ouvrir la tâche
                   </Link>
@@ -268,12 +240,12 @@ export default async function DashboardPage({ searchParams }: Props) {
             </h2>
             <Link
               href="/tasks"
-              className="text-sm font-medium text-emerald-700 hover:text-emerald-800"
+              className="text-sm font-medium text-theme-link hover:text-emerald-700"
             >
               Voir tout
             </Link>
           </div>
-          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <Panel className="overflow-hidden">
             <table className="min-w-full text-left text-sm">
               <thead className="bg-slate-50 text-xs font-semibold uppercase text-slate-500">
                 <tr>
@@ -286,7 +258,7 @@ export default async function DashboardPage({ searchParams }: Props) {
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {recentTasks.map((t) => (
-                  <tr key={t.id} className="hover:bg-slate-50/60">
+                  <tr key={t.id} className="transition-colors hover:bg-emerald-50">
                     <td className="px-4 py-3">
                       <Link
                         href={`/tasks/${t.id}`}
@@ -318,7 +290,7 @@ export default async function DashboardPage({ searchParams }: Props) {
                 <div className="mt-3 flex flex-wrap justify-center gap-2">
                   <Link
                     href="/clients/new"
-                    className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-700"
+                    className="rounded-lg ui-btn ui-btn-primary"
                   >
                     Nouveau client
                   </Link>
@@ -337,18 +309,19 @@ export default async function DashboardPage({ searchParams }: Props) {
                 </div>
               </div>
             )}
-          </div>
+          </Panel>
         </div>
 
         <div className="space-y-4">
           <h2 className="text-lg font-semibold text-slate-900">
             Charge & fiabilité
           </h2>
-          <div className="space-y-3 rounded-2xl border border-slate-200 bg-slate-50/80 p-4 shadow-inner">
-            {collaborators.map((u) => (
+          <div className="space-y-3 rounded-2xl border border-slate-200/80 bg-gradient-to-b from-slate-50/90 to-white p-4">
+            {collaborators.map((u, i) => (
               <div
                 key={u.id}
-                className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm"
+                className="ui-card ui-card-hover animate-fade-in-up px-4 py-3"
+                style={{ animationDelay: `${i * 70}ms` }}
               >
                 <div className="flex items-start justify-between gap-2">
                   <div>
@@ -358,7 +331,7 @@ export default async function DashboardPage({ searchParams }: Props) {
                       {u.maxConcurrentTasks}
                     </p>
                   </div>
-                  <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-900">
+                  <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-xs font-semibold text-emerald-600">
                     {Math.round(u.reliabilityScore)} pts
                   </span>
                 </div>

@@ -61,6 +61,7 @@ model User {
   tasks              Task[]         @relation("Assignee")
   notifications      Notification[]
   documents          Document[]     @relation("UploadedBy")
+  contractsCreated   Contract[]     @relation("ContractsCreated")
   createdAt          DateTime       @default(now())
 }
 
@@ -78,8 +79,22 @@ model Notification {
   @@index([userId, readAt])
 }
 
+enum ContractStatus {
+  DRAFT
+  PENDING_SIGNATURE
+  SIGNED
+  CANCELLED
+}
+
+enum ContractTemplateType {
+  LETTRE_MISSION
+  CONVENTION_HONORAIRES
+  ENGAGEMENT_ACOMPTE
+  ACCORD_RGPD
+}
+
 model Client {
-  id        String   @id @default(cuid())
+  id        String     @id @default(cuid())
   name      String
   siret     String?
   email     String?
@@ -87,7 +102,31 @@ model Client {
   notes     String?
   tasks     Task[]
   documents Document[]
-  createdAt DateTime @default(now())
+  contracts Contract[]
+  createdAt DateTime   @default(now())
+}
+
+model Contract {
+  id               String               @id @default(cuid())
+  clientId         String
+  client           Client               @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  templateType     ContractTemplateType
+  title            String
+  status           ContractStatus       @default(DRAFT)
+  fieldsJson       String               @default("{}")
+  renderedBody     String               @default("")
+  cabinetSigner    String?
+  clientSigner     String?
+  cabinetSignature String?
+  clientSignature  String?
+  signedAt         DateTime?
+  createdById      String?
+  createdBy        User?                @relation("ContractsCreated", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+
+  @@index([clientId, status])
+  @@index([status])
 }
 
 model Document {

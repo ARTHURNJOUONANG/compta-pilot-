@@ -7,7 +7,7 @@ import { reprocessOcrAction } from "@/actions/documents";
 const statusStyles: Record<OcrStatus, string> = {
   PENDING: "bg-slate-100 text-slate-700",
   PROCESSING: "bg-sky-100 text-sky-800",
-  DONE: "bg-emerald-100 text-emerald-900",
+  DONE: "bg-emerald-100 text-emerald-700",
   FAILED: "bg-rose-100 text-rose-800",
   SKIPPED: "bg-slate-100 text-slate-500",
 };
@@ -50,7 +50,7 @@ export function DocumentOcrPanel({ doc }: { doc: DocumentOcrFields }) {
           <form action={reprocessOcrAction.bind(null, doc.id)}>
             <button
               type="submit"
-              className="font-medium text-emerald-700 hover:underline"
+              className="font-medium text-theme-link hover:underline"
             >
               Relancer l&apos;OCR
             </button>

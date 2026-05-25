@@ -34,7 +34,7 @@ export default async function RapportPage() {
         </p>
         <Link
           href="/"
-          className="inline-block text-sm font-medium text-emerald-700 hover:underline"
+          className="inline-block text-sm font-medium text-theme-link hover:underline"
         >
           ← Retour au tableau de bord
         </Link>
@@ -109,7 +109,7 @@ export default async function RapportPage() {
           <PrintButton className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-800 hover:bg-slate-50" />
           <a
             href="/api/export/tasks-overdue"
-            className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+            className="rounded-xl ui-btn ui-btn-primary"
           >
             Export CSV retards
           </a>

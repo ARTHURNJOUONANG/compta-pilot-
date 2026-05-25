@@ -1,7 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  serverExternalPackages: ["tesseract.js", "pdf-parse", "canvas", "nodemailer"],
+  serverExternalPackages: [
+    "tesseract.js",
+    "pdf-parse",
+    "canvas",
+    "nodemailer",
+    "pdfkit",
+  ],
   outputFileTracingIncludes: {
     "/*": ["./public/vercel-empty.db", "./prisma/vercel-empty.db"],
   },

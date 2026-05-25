@@ -7,7 +7,7 @@ export default function NewClientPage() {
       <div>
         <Link
           href="/clients"
-          className="text-sm font-medium text-emerald-700 hover:underline"
+          className="text-sm font-medium text-theme-link hover:underline"
         >
           ← Clients
         </Link>
@@ -78,13 +78,13 @@ export default function NewClientPage() {
             type="checkbox"
             name="generateObligations"
             defaultChecked
-            className="rounded border-slate-300 text-emerald-600"
+            className="rounded border-emerald-500/50 text-emerald-600"
           />
           Générer les obligations standards (TVA, URSSAF, bilan, liasse)
         </label>
         <button
           type="submit"
-          className="w-full rounded-xl bg-emerald-600 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700"
+          className="w-full rounded-xl ui-btn ui-btn-primary"
         >
           Enregistrer
         </button>

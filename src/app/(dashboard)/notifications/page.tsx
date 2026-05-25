@@ -64,11 +64,11 @@ export default async function NotificationsPage() {
         {notifications.map((n) => (
           <li
             key={n.id}
-            className={`px-4 py-4 ${!n.readAt ? "bg-emerald-50/40" : ""}`}
+            className={`px-4 py-4 ${!n.readAt ? "bg-emerald-50" : ""}`}
           >
             <div className="flex flex-wrap items-start justify-between gap-2">
               <div>
-                <span className="text-xs font-medium uppercase text-emerald-700">
+                <span className="text-xs font-medium uppercase text-theme-link">
                   {typeLabel(n.type)}
                 </span>
                 <p className="mt-1 font-medium text-slate-900">{n.title}</p>
@@ -83,14 +83,14 @@ export default async function NotificationsPage() {
                 {n.taskId ? (
                   <Link
                     href={`/tasks/${n.taskId}`}
-                    className="text-sm font-medium text-emerald-700 hover:underline"
+                    className="text-sm font-medium text-theme-link hover:underline"
                   >
                     Voir la tâche
                   </Link>
                 ) : n.type === NotificationType.OCR_COMPLETED ? (
                   <Link
                     href="/documents"
-                    className="text-sm font-medium text-emerald-700 hover:underline"
+                    className="text-sm font-medium text-theme-link hover:underline"
                   >
                     Voir les documents
                   </Link>

@@ -55,6 +55,7 @@ export async function sendEmail(params: {
   subject: string;
   text: string;
   html?: string;
+  attachments?: { filename: string; content: Buffer }[];
 }): Promise<void> {
   if (!isEmailConfigured()) {
     if (isProduction()) {
@@ -77,6 +78,63 @@ export async function sendEmail(params: {
     subject: params.subject,
     text: params.text,
     html: params.html ?? params.text.replace(/\n/g, "<br>"),
+    attachments: params.attachments?.map((a) => ({
+      filename: a.filename,
+      content: a.content,
+    })),
+  });
+}
+
+export async function sendContractSignedEmail(params: {
+  to: string;
+  contractTitle: string;
+  clientName: string;
+  cabinetSigner: string | null;
+  signedAt: Date;
+  pdfBuffer: Buffer;
+  pdfFilename: string;
+  message?: string;
+  contractUrl: string;
+}): Promise<void> {
+  const dateLabel = params.signedAt.toLocaleDateString("fr-FR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
+  const intro = params.message?.trim()
+    ? `${params.message.trim()}\n\n`
+    : "";
+
+  const text = [
+    "Bonjour,",
+    "",
+    `${intro}Veuillez trouver ci-joint le contrat signé : ${params.contractTitle}.`,
+    "",
+    `Client : ${params.clientName}`,
+    params.cabinetSigner ? `Signataire cabinet : ${params.cabinetSigner}` : "",
+    `Date de signature : ${dateLabel}`,
+    "",
+    `Consulter en ligne : ${params.contractUrl}`,
+    "",
+    "— Compta Pilot",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  const html = text.replace(/\n/g, "<br>");
+
+  await sendEmail({
+    to: params.to,
+    subject: `[Compta Pilot] Contrat signé — ${params.clientName}`,
+    text,
+    html,
+    attachments: [
+      {
+        filename: params.pdfFilename,
+        content: params.pdfBuffer,
+      },
+    ],
   });
 }
 

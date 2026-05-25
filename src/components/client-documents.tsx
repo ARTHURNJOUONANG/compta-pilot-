@@ -76,7 +76,7 @@ export function ClientDocuments({
         </div>
         <Link
           href="/documents"
-          className="text-sm font-medium text-emerald-700 hover:underline"
+          className="text-sm font-medium text-theme-link hover:underline"
         >
           Vue globale →
         </Link>
@@ -118,7 +118,7 @@ export function ClientDocuments({
                             <div className="flex flex-wrap items-center gap-2">
                               <Link
                                 href={`/documents/${doc.id}`}
-                                className="truncate font-medium text-emerald-800 hover:underline"
+                                className="truncate font-medium text-theme-link"
                               >
                                 {doc.label ?? doc.fileName}
                               </Link>
