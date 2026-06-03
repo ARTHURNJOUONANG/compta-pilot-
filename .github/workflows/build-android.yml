@@ -1,0 +1,119 @@
+name: Build Android APK
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    name: Build APK Android
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Configuration Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Configuration Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+
+      - name: Configuration Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          api-level: 34
+          build-tools: "34.0.0"
+          accept-android-sdk-licenses: true
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('android/**/gradle-wrapper.properties', 'package-lock.json') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
+      - name: Installation des dépendances npm
+        run: npm ci
+
+      - name: Préparation assets Capacitor
+        env:
+          APP_NAME: ${{ vars.APP_NAME || 'Plateforme Compta' }}
+          APP_ID: ${{ vars.APP_ID || 'com.keyce.plateformecompta' }}
+          CAPACITOR_SERVER_URL: ${{ vars.CAPACITOR_SERVER_URL || secrets.CAPACITOR_SERVER_URL || 'https://compta-pilot.vercel.app/setup' }}
+          CAPACITOR_STATIC_EXPORT: ${{ vars.CAPACITOR_STATIC_EXPORT || 'false' }}
+        run: |
+          if [ "${CAPACITOR_STATIC_EXPORT}" = "true" ]; then
+            npm run build
+          else
+            npm run cap:prepare
+          fi
+
+      - name: Initialisation Capacitor Android
+        env:
+          APP_NAME: ${{ vars.APP_NAME || 'Plateforme Compta' }}
+          APP_ID: ${{ vars.APP_ID || 'com.keyce.plateformecompta' }}
+          CAPACITOR_SERVER_URL: ${{ vars.CAPACITOR_SERVER_URL || secrets.CAPACITOR_SERVER_URL || 'https://compta-pilot.vercel.app/setup' }}
+        run: |
+          if [ ! -d "android" ]; then
+            npx cap add android
+          fi
+          npx cap sync android
+
+      - name: Permissions Gradle
+        working-directory: android
+        run: chmod +x gradlew
+
+      - name: Compilation APK Debug
+        working-directory: android
+        run: |
+          ./gradlew assembleDebug \
+            --no-daemon \
+            -Dorg.gradle.jvmargs="-Xmx3g"
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug-${{ github.sha }}
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 30
+
+      - name: Résumé du build
+        run: |
+          APK_PATH="android/app/build/outputs/apk/debug/app-debug.apk"
+          APK_SIZE=$(du -sh "$APK_PATH" | cut -f1)
+          echo "## Build Android reussi" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Information | Valeur |" >> $GITHUB_STEP_SUMMARY
+          echo "|---|---|" >> $GITHUB_STEP_SUMMARY
+          echo "| Fichier | app-debug.apk |" >> $GITHUB_STEP_SUMMARY
+          echo "| Taille | $APK_SIZE |" >> $GITHUB_STEP_SUMMARY
+          echo "| Commit | ${{ github.sha }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Branche | ${{ github.ref_name }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| URL app | ${{ vars.CAPACITOR_SERVER_URL || secrets.CAPACITOR_SERVER_URL || 'https://compta-pilot.vercel.app/setup' }} |" >> $GITHUB_STEP_SUMMARY
+
+      - name: Notification d'échec
+        if: failure()
+        run: |
+          echo "## Build Android echoue" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Causes frequentes :**" >> $GITHUB_STEP_SUMMARY
+          echo "- package-lock.json desynchronise" >> $GITHUB_STEP_SUMMARY
+          echo "- capacitor.config.ts absent ou mal configure" >> $GITHUB_STEP_SUMMARY
+          echo "- CAPACITOR_SERVER_URL non definie" >> $GITHUB_STEP_SUMMARY

@@ -17,6 +17,13 @@
 /.next/
 /out/
 
+# capacitor / android (genere au build)
+/android/
+/generated/
+
+# config mobile locale
+.env.mobile
+
 # production
 /build
 

@@ -1,0 +1,19 @@
+services:
+  android-builder:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    volumes:
+      - ..:/workspace
+      - ../generated:/workspace/generated
+      - android-npm-cache:/root/.npm
+      - android-gradle-cache:/root/.gradle
+    environment:
+      - APP_NAME=${APP_NAME:-Plateforme Compta}
+      - APP_ID=${APP_ID:-com.keyce.plateformecompta}
+      - CAPACITOR_SERVER_URL=${CAPACITOR_SERVER_URL:-}
+      - CAPACITOR_STATIC_EXPORT=${CAPACITOR_STATIC_EXPORT:-false}
+
+volumes:
+  android-npm-cache:
+  android-gradle-cache:
