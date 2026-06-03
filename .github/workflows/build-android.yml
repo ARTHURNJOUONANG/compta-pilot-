@@ -56,7 +56,7 @@ jobs:
         env:
           APP_NAME: ${{ vars.APP_NAME || 'Plateforme Compta' }}
           APP_ID: ${{ vars.APP_ID || 'com.keyce.plateformecompta' }}
-          CAPACITOR_SERVER_URL: ${{ vars.CAPACITOR_SERVER_URL || secrets.CAPACITOR_SERVER_URL || 'https://compta-pilot.vercel.app/setup' }}
+          CAPACITOR_SERVER_URL: ${{ vars.CAPACITOR_SERVER_URL || secrets.CAPACITOR_SERVER_URL || 'https://compta-pilot.vercel.app/login' }}
           CAPACITOR_STATIC_EXPORT: ${{ vars.CAPACITOR_STATIC_EXPORT || 'false' }}
         run: |
           if [ "${CAPACITOR_STATIC_EXPORT}" = "true" ]; then
@@ -69,7 +69,7 @@ jobs:
         env:
           APP_NAME: ${{ vars.APP_NAME || 'Plateforme Compta' }}
           APP_ID: ${{ vars.APP_ID || 'com.keyce.plateformecompta' }}
-          CAPACITOR_SERVER_URL: ${{ vars.CAPACITOR_SERVER_URL || secrets.CAPACITOR_SERVER_URL || 'https://compta-pilot.vercel.app/setup' }}
+          CAPACITOR_SERVER_URL: ${{ vars.CAPACITOR_SERVER_URL || secrets.CAPACITOR_SERVER_URL || 'https://compta-pilot.vercel.app/login' }}
         run: |
           if [ ! -d "android" ]; then
             npx cap add android

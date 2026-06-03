@@ -44,7 +44,7 @@ export async function middleware(req: NextRequest) {
 
   if (!authenticated) {
     const url = req.nextUrl.clone();
-    url.pathname = "/setup";
+    url.pathname = "/login";
     url.search = "";
     const res = NextResponse.redirect(url);
     if (hasStaleCookies) clearAuthCookies(res);

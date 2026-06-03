@@ -59,9 +59,10 @@ export async function sendEmail(params: {
 }): Promise<void> {
   if (!isEmailConfigured()) {
     if (isProduction()) {
-      throw new Error(
-        "SMTP non configuré : définissez MAILER_DSN ou SMTP_HOST en production.",
+      console.warn(
+        "[email] SMTP non configure — notification ignoree en production.",
       );
+      return;
     }
     console.warn(
       `[email:dev] ${params.to} — ${params.subject}\n${params.text}`,

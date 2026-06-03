@@ -89,12 +89,20 @@ async function writeTemplateTo(targetPath: string): Promise<void> {
 
 async function sqliteHasRequiredTables(): Promise<boolean> {
   try {
+    const required = [
+      "User",
+      "Client",
+      "Task",
+      "Document",
+      "Notification",
+      "Contract",
+    ];
     const rows = await prisma.$queryRaw<{ name: string }[]>`
       SELECT name FROM sqlite_master
       WHERE type = 'table'
-        AND name IN ('User', 'Client', 'Task', 'Document', 'Notification')
+        AND name IN ('User', 'Client', 'Task', 'Document', 'Notification', 'Contract')
     `;
-    return rows.length === 5;
+    return rows.length === required.length;
   } catch {
     return false;
   }
