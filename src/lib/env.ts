@@ -32,7 +32,11 @@ export function assertProductionConfig(): void {
   required("SESSION_SECRET");
   required("APP_URL");
 
-  if (!isEmailConfigured()) {
+  const emailConfigured = Boolean(
+    process.env.MAILER_DSN ||
+      (process.env.SMTP_HOST && process.env.EMAIL_FROM),
+  );
+  if (!emailConfigured) {
     console.warn(
       "[config] SMTP non configure — les emails seront ignores en production.",
     );
