@@ -14,54 +14,63 @@ function startOfToday() {
 }
 
 export async function GET() {
-  const auth = await requireApiUser();
-  if (auth instanceof NextResponse) return auth;
+  try {
+    const auth = await requireApiUser();
+    if (auth instanceof NextResponse) return auth;
 
-  const denied = requireApiRole(auth, [Role.DIRECTOR, Role.MANAGER]);
-  if (denied) return denied;
+    const denied = requireApiRole(auth, [
+      Role.DIRECTOR,
+      Role.MANAGER,
+      Role.COLLABORATOR,
+    ]);
+    if (denied) return denied;
 
-  const today = startOfToday();
-  const tasks = await prisma.task.findMany({
-    where: {
-      status: { not: TaskStatus.DONE },
-      dueDate: { lt: today },
-    },
-    orderBy: [{ dueDate: "asc" }],
-    include: {
-      client: { select: { name: true } },
-      assignee: { select: { name: true, email: true } },
-    },
-  });
+    const today = startOfToday();
+    const tasks = await prisma.task.findMany({
+      where: {
+        status: { not: TaskStatus.DONE },
+        dueDate: { lt: today },
+      },
+      orderBy: [{ dueDate: "asc" }],
+      include: {
+        client: { select: { name: true } },
+        assignee: { select: { name: true, email: true } },
+      },
+    });
 
-  const csv = buildCsv(
-    [
-      "Tâche",
-      "Client",
-      "Assigné",
-      "Email assigné",
-      "Échéance",
-      "Statut",
-      "Priorité",
-      "Catégorie",
-    ],
-    tasks.map((t) => [
-      t.title,
-      t.client.name,
-      t.assignee?.name ?? "",
-      t.assignee?.email ?? "",
-      formatDateFr(t.dueDate),
-      t.status,
-      t.priority,
-      t.category,
-    ]),
-  );
+    const csv = buildCsv(
+      [
+        "Tâche",
+        "Client",
+        "Assigné",
+        "Email assigné",
+        "Échéance",
+        "Statut",
+        "Priorité",
+        "Catégorie",
+      ],
+      tasks.map((t) => [
+        t.title,
+        t.client.name,
+        t.assignee?.name ?? "",
+        t.assignee?.email ?? "",
+        formatDateFr(t.dueDate),
+        t.status,
+        t.priority,
+        t.category,
+      ]),
+    );
 
-  const filename = `taches-en-retard-${new Date().toISOString().slice(0, 10)}.csv`;
+    const filename = `taches-en-retard-${new Date().toISOString().slice(0, 10)}.csv`;
 
-  return new NextResponse(csv, {
-    headers: {
-      "Content-Type": "text/csv; charset=utf-8",
-      "Content-Disposition": `attachment; filename="${filename}"`,
-    },
-  });
+    return new NextResponse(csv, {
+      headers: {
+        "Content-Type": "text/csv; charset=utf-8",
+        "Content-Disposition": `attachment; filename="${filename}"`,
+      },
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Erreur export";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
 }

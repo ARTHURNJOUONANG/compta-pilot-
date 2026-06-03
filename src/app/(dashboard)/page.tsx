@@ -30,7 +30,9 @@ export default async function DashboardPage({ searchParams }: Props) {
     user?.role === Role.DIRECTOR || user?.role === Role.MANAGER;
   const monthlyCreated = Number.parseInt(sp.monthlyTva ?? "", 10);
 
-  await syncOverdueNotifications();
+  await syncOverdueNotifications().catch((err) => {
+    console.error("[dashboard] syncOverdueNotifications:", err);
+  });
 
   const showSuggestions =
     user?.role === Role.DIRECTOR || user?.role === Role.MANAGER;

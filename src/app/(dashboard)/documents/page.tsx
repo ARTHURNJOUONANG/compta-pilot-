@@ -75,10 +75,10 @@ export default async function DocumentsPage({ searchParams }: Props) {
       </header>
 
       {sp.docError && (
-        <FlashBanner message={decodeURIComponent(sp.docError)} variant="info" />
+        <FlashBanner message={sp.docError} variant="info" />
       )}
       {sp.docWarn && (
-        <FlashBanner message={decodeURIComponent(sp.docWarn)} variant="info" />
+        <FlashBanner message={sp.docWarn} variant="info" />
       )}
       {!Number.isNaN(uploadedCount) && sp.docUploaded && (
         <FlashBanner

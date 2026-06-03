@@ -106,13 +106,18 @@ export async function uploadDocumentsBulkAction(
         : sharedLabel
           ? `${sharedLabel} — ${file.name}`
           : null;
-    const { ocr } = await registerDocumentUpload(
-      clientId,
-      file,
-      label,
-      user.id,
-    );
-    if (ocr) ocrStarted++;
+    try {
+      const { ocr } = await registerDocumentUpload(
+        clientId,
+        file,
+        label,
+        user.id,
+      );
+      if (ocr) ocrStarted++;
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Erreur de depot";
+      errors.push(`${file.name} : ${msg}`);
+    }
   }
 
   revalidatePath(`/clients/${clientId}`);

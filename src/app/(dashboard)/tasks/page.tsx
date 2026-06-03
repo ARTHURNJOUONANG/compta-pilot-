@@ -22,8 +22,7 @@ export default async function TasksPage({ searchParams }: Search) {
   const filterOverdue = sp.filter === "overdue";
   const today = startOfToday();
   const user = await getSessionUser();
-  const canExport =
-    user?.role === Role.DIRECTOR || user?.role === Role.MANAGER;
+  const canExport = Boolean(user);
 
   const where = {
     ...(statusFilter && Object.values(TaskStatus).includes(statusFilter)

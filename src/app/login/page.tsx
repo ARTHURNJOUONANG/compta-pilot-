@@ -67,9 +67,9 @@ export default function LoginPage() {
         </button>
       </form>
       <p className="mt-6 text-center text-xs text-slate-500">
-        Le compte cabinet a déjà été créé.{" "}
+        Première installation du cabinet ?{" "}
         <Link href="/setup" className="font-medium text-slate-600 hover:underline">
-          Vérifier le statut de l&apos;installation
+          Créer le compte dirigeant
         </Link>
       </p>
     </AuthShell>

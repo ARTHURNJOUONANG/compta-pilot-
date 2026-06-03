@@ -7,7 +7,7 @@ import { getSessionUser } from "@/lib/auth";
 
 export async function markNotificationReadAction(notificationId: string) {
   const user = await getSessionUser();
-  if (!user) throw new Error("Non authentifié");
+  if (!user) redirect("/login");
 
   await prisma.notification.updateMany({
     where: { id: notificationId, userId: user.id },
@@ -20,7 +20,7 @@ export async function markNotificationReadAction(notificationId: string) {
 
 export async function markAllNotificationsReadAction() {
   const user = await getSessionUser();
-  if (!user) throw new Error("Non authentifié");
+  if (!user) redirect("/login");
 
   await prisma.notification.updateMany({
     where: { userId: user.id, readAt: null },
@@ -31,4 +31,4 @@ export async function markAllNotificationsReadAction() {
   revalidatePath("/", "layout");
   redirect("/notifications");
 }
-
+

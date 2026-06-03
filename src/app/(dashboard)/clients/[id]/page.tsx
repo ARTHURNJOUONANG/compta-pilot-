@@ -82,7 +82,7 @@ export default async function ClientDetailPage({ params, searchParams }: Props) 
         />
       )}
       {sp.docWarn && (
-        <FlashBanner message={decodeURIComponent(sp.docWarn)} variant="info" />
+        <FlashBanner message={sp.docWarn} variant="info" />
       )}
       {sp.ocrDone === "1" && (
         <FlashBanner message="Analyse OCR terminée." />
@@ -91,7 +91,7 @@ export default async function ClientDetailPage({ params, searchParams }: Props) 
         <FlashBanner message="Document supprimé." />
       )}
       {sp.docError && (
-        <FlashBanner message={decodeURIComponent(sp.docError)} variant="info" />
+        <FlashBanner message={sp.docError} variant="info" />
       )}
 
       <div>

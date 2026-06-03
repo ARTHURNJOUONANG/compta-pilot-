@@ -31,11 +31,10 @@ export function assertProductionConfig(): void {
 
   required("SESSION_SECRET");
   required("APP_URL");
-  required("EMAIL_FROM");
 
-  if (!process.env.MAILER_DSN && !process.env.SMTP_HOST) {
-    throw new Error(
-      "En production, configurez MAILER_DSN ou SMTP_HOST (+ SMTP_USER/SMTP_PASS).",
+  if (!isEmailConfigured()) {
+    console.warn(
+      "[config] SMTP non configure — les emails seront ignores en production.",
     );
   }
 }

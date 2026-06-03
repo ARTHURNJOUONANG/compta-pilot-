@@ -29,6 +29,23 @@ export function uploadsRoot(): string {
   if (process.env.UPLOADS_DIR?.trim()) {
     return process.env.UPLOADS_DIR.trim();
   }
+
+  const dbUrl = process.env.DATABASE_URL?.trim();
+  if (dbUrl?.startsWith("file:")) {
+    let filePath = dbUrl.slice("file:".length);
+    if (process.platform === "win32" && /^\/[a-zA-Z]:/.test(filePath)) {
+      filePath = filePath.slice(1);
+    }
+    if (!path.isAbsolute(filePath)) {
+      filePath = path.join(process.cwd(), filePath);
+    }
+    return path.join(path.dirname(filePath), "uploads");
+  }
+
+  if (process.env.VERCEL) {
+    return "/tmp/uploads";
+  }
+
   return path.join(process.cwd(), "uploads");
 }
 
