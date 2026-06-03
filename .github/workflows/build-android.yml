@@ -106,7 +106,7 @@ jobs:
           echo "| Taille | $APK_SIZE |" >> $GITHUB_STEP_SUMMARY
           echo "| Commit | ${{ github.sha }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Branche | ${{ github.ref_name }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| URL app | ${{ vars.CAPACITOR_SERVER_URL || secrets.CAPACITOR_SERVER_URL || 'https://compta-pilot.vercel.app/setup' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| URL app | ${{ vars.CAPACITOR_SERVER_URL || secrets.CAPACITOR_SERVER_URL || 'https://compta-pilot.vercel.app/login' }} |" >> $GITHUB_STEP_SUMMARY
 
       - name: Notification d'échec
         if: failure()
