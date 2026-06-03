@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Role, TaskStatus } from "@prisma/client";
+import { TaskStatus } from "@prisma/client";
 import { getSessionUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { PriorityBadge, StatusBadge } from "@/components/badge";
