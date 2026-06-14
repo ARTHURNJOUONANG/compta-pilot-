@@ -10,6 +10,10 @@ import {
 import path from "node:path";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
+import {
+  downloadSqliteFromBlob,
+  resolveSqliteFilePath,
+} from "@/lib/sqlite-blob-sync";
 
 function templateCandidates(): string[] {
   const cwd = process.cwd();
@@ -24,19 +28,6 @@ export function resolveSqliteTemplatePath(): string | null {
     if (existsSync(candidate)) return candidate;
   }
   return null;
-}
-
-function resolveSqliteFilePath(databaseUrl: string): string | null {
-  if (!databaseUrl.startsWith("file:")) return null;
-
-  let filePath = databaseUrl.slice("file:".length);
-  if (process.platform === "win32" && /^\/[a-zA-Z]:/.test(filePath)) {
-    filePath = filePath.slice(1);
-  }
-  if (!path.isAbsolute(filePath)) {
-    filePath = path.join(process.cwd(), filePath);
-  }
-  return filePath;
 }
 
 let initPromise: Promise<void> | null = null;
@@ -148,6 +139,10 @@ async function doEnsureSqliteDatabase(): Promise<void> {
 
   // Copier AVANT toute requête Prisma si le fichier n'existe pas encore.
   if (!existsSync(filePath)) {
+    if (process.env.VERCEL && (await downloadSqliteFromBlob(filePath))) {
+      return;
+    }
+
     const localTemplate = resolveSqliteTemplatePath();
     if (localTemplate) {
       copyFileSync(localTemplate, filePath);
@@ -160,6 +155,9 @@ async function doEnsureSqliteDatabase(): Promise<void> {
   }
 
   if (!(await sqliteHasRequiredTables())) {
+    if (process.env.VERCEL && (await downloadSqliteFromBlob(filePath))) {
+      if (await sqliteHasRequiredTables()) return;
+    }
     await replaceDatabaseFile(filePath, url);
   }
 }
@@ -177,6 +175,23 @@ export function ensureSqliteDatabase(): Promise<void> {
 
 export function resetSqliteDatabaseInit(): void {
   initPromise = null;
+}
+
+/** Recharge la base depuis Vercel Blob (instances serverless isolées). */
+export async function refreshSqliteFromBlob(): Promise<boolean> {
+  const url = process.env.DATABASE_URL?.trim();
+  if (!url?.startsWith("file:") || !process.env.VERCEL) return false;
+
+  const filePath = resolveSqliteFilePath(url);
+  if (!filePath) return false;
+
+  await prisma.$disconnect();
+  resetSqliteDatabaseInit();
+
+  if (!(await downloadSqliteFromBlob(filePath))) return false;
+
+  await ensureSqliteDatabase();
+  return true;
 }
 
 export function isMissingTableError(err: unknown): boolean {

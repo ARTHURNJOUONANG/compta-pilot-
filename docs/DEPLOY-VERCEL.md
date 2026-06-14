@@ -8,6 +8,16 @@
 | `APP_URL` | `https://compta-pilot.vercel.app` |
 | `DATABASE_URL` | `file:/tmp/compta.db` |
 | `UPLOADS_DIR` | `/tmp/uploads` |
+| `BLOB_READ_WRITE_TOKEN` | *(recommandé)* token du store **Blob** Vercel — synchronise la base SQLite entre instances |
+
+**Activer Blob (recommandé pour éviter les redirections aléatoires) :**
+
+1. Vercel → **Storage** → **Create Database** → **Blob**
+2. Lier le store au projet `compta-pilot`
+3. La variable `BLOB_READ_WRITE_TOKEN` est ajoutée automatiquement
+4. Redéployer
+
+Sans Blob, chaque instance serverless a sa propre base `/tmp` : navigation instable (retour tableau de bord, `/setup`, etc.).
 | `EMAIL_FROM` | `Compta Pilot <votre@email.com>` |
 | `SMTP_HOST` | `smtp-relay.brevo.com` |
 | `SMTP_PORT` | `587` |

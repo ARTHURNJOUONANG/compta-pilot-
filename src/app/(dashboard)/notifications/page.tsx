@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { NotificationType } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/auth";
@@ -7,6 +6,8 @@ import {
   markAllNotificationsReadAction,
   markNotificationReadAction,
 } from "@/actions/notifications";
+
+export const dynamic = "force-dynamic";
 
 function typeLabel(type: NotificationType): string {
   switch (type) {
@@ -27,13 +28,38 @@ function typeLabel(type: NotificationType): string {
 
 export default async function NotificationsPage() {
   const user = await getSessionUser();
-  if (!user) redirect("/login");
+  if (!user) {
+    return (
+      <div className="mx-auto max-w-xl rounded-2xl border border-rose-200 bg-rose-50 p-8">
+        <h1 className="text-xl font-semibold text-rose-950">Session expirée</h1>
+        <p className="mt-2 text-sm text-rose-900/90">
+          Reconnectez-vous pour consulter vos notifications.
+        </p>
+      </div>
+    );
+  }
 
-  const notifications = await prisma.notification.findMany({
-    where: { userId: user.id },
-    orderBy: { createdAt: "desc" },
-    take: 50,
-  });
+  let notifications;
+  try {
+    notifications = await prisma.notification.findMany({
+      where: { userId: user.id },
+      orderBy: { createdAt: "desc" },
+      take: 50,
+    });
+  } catch (err) {
+    console.error("[notifications]", err);
+    return (
+      <div className="mx-auto max-w-xl rounded-2xl border border-rose-200 bg-rose-50 p-8">
+        <h1 className="text-xl font-semibold text-rose-950">
+          Notifications indisponibles
+        </h1>
+        <p className="mt-2 text-sm text-rose-900/90">
+          Impossible de charger les notifications. Rechargez la page ou
+          reconnectez-vous.
+        </p>
+      </div>
+    );
+  }
 
   const unread = notifications.filter((n) => !n.readAt).length;
 

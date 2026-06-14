@@ -34,8 +34,10 @@ export async function middleware(req: NextRequest) {
   }
 
   if (pathname.startsWith("/login")) {
-    if (authenticated) {
-      return NextResponse.redirect(new URL("/", req.url));
+    if (req.nextUrl.searchParams.has("reauth")) {
+      const res = NextResponse.next();
+      clearAuthCookies(res);
+      return res;
     }
     const res = NextResponse.next();
     if (hasStaleCookies) clearAuthCookies(res);
