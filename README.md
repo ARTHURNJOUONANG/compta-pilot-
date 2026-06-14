@@ -2,6 +2,9 @@
 
 Application web Next.js pour cabinets comptables : clients, tâches, assignation, OCR factures, notifications email.
 
+**Production :** https://compta-pilot.vercel.app  
+**Livraison / soutenance :** voir **[docs/LIVRAISON.md](./docs/LIVRAISON.md)**
+
 ## Prérequis
 
 - Node.js 20+
